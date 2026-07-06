@@ -1,0 +1,80 @@
+
+=== Vanguard ===
+Squire of Dawn | Cost 1 | ATK 1 | HP 3 | Counter 0 | Shield 1
+Footman | Cost 1 | ATK 2 | HP 3 | Counter 0 | Tanpa keyword
+Shield Bearer | Cost 2 | ATK 1 | HP 5 | Counter 1 | Armor 1
+Spear Guard | Cost 2 | ATK 2 | HP 4 | Counter 1 | Pierce 1
+Knight | Cost 3 | ATK 4 | HP 5 | Counter 1 | Tanpa keyword
+Banner Captain | Cost 3 | ATK 3 | HP 5 | Counter 1 | Heal Row 1
+Iron Sentinel | Cost 4 | ATK 3 | HP 7 | Counter 2 | Armor 1
+Royal Cavalier | Cost 4 | ATK 5 | HP 5 | Counter 0 | Quick
+Royal Champion | Cost 5 | ATK 6 | HP 7 | Counter 2 | Execute 1
+Fortress Golem | Cost 6 | ATK 5 | HP 10 | Counter 2 | Armor 2, Shield 1
+Blessing | Cost 2 | instant | phase | row_phase_stats
+Stone Skin | Cost 2 | instant | phase | row_phase_armor
+Counter Formation | Cost 2 | instant | phase | row_phase_counter
+Dispel | Cost 1 | instant | instant | destroy_spell
+
+=== Wildclaw ===
+Cave Rat | Cost 1 | ATK 2 | HP 1 | Counter 0 | Quick
+Forest Scout | Cost 1 | ATK 2 | HP 2 | Counter 0 | Quick
+Wolf Rider | Cost 2 | ATK 3 | HP 3 | Counter 0 | Quick
+Razor Boar | Cost 2 | ATK 4 | HP 2 | Counter 0 | Pierce 1
+Huntress | Cost 2 | ATK 3 | HP 2 | Counter 0 | Sniper 1
+Venom Lizard | Cost 3 | ATK 3 | HP 4 | Counter 0 | Poison 1
+Sabertooth | Cost 3 | ATK 5 | HP 3 | Counter 0 | Execute 1
+Berserker | Cost 4 | ATK 6 | HP 4 | Counter 1 | Fury 2
+Thunder Roc | Cost 4 | ATK 5 | HP 4 | Counter 0 | Quick, Splash 1
+Ancient Behemoth | Cost 7 | ATK 9 | HP 9 | Counter 2 | Armor 1, Pierce 2
+Fire Bolt | Cost 2 | instant | instant | row_damage
+Battle Cry | Cost 2 | instant | phase | row_phase_attack
+Siege Order | Cost 2 | instant | phase | row_phase_pierce
+Trap Rune | Cost 2 | trap | triggered | row_trap_damage
+
+=== Arcanum ===
+Apprentice Mage | Cost 1 | ATK 2 | HP 2 | Counter 0 | Tanpa keyword
+Arcane Archer | Cost 2 | ATK 3 | HP 2 | Counter 0 | Sniper 1
+Frost Adept | Cost 2 | ATK 2 | HP 4 | Counter 0 | Shield 1
+Spellblade | Cost 3 | ATK 4 | HP 4 | Counter 1 | Shield 1
+Storm Caller | Cost 3 | ATK 4 | HP 3 | Counter 0 | Splash 1
+Mirror Mage | Cost 4 | ATK 3 | HP 5 | Counter 1 | Armor 1, Shield 1
+Rune Construct | Cost 4 | ATK 4 | HP 7 | Counter 1 | Armor 1
+Phoenix Initiate | Cost 5 | ATK 6 | HP 4 | Counter 0 | Rebirth
+Chronomancer | Cost 5 | ATK 5 | HP 6 | Counter 0 | Quick, Shield 1
+Arcane Dragon | Cost 7 | ATK 8 | HP 8 | Counter 1 | Shield 1, Splash 2
+Rain | Cost 3 | shared | persistent | column_ranged_attack
+Chain Lightning | Cost 3 | instant | instant | column_damage
+Arcane Well | Cost 3 | shared | persistent | column_turn_heal
+Mirror Barrier | Cost 2 | trap | triggered | row_trap_barrier
+
+=== Umbral ===
+Shade | Cost 1 | ATK 2 | HP 2 | Counter 0 | Stealth
+Grave Acolyte | Cost 2 | ATK 2 | HP 4 | Counter 0 | Lifesteal 1
+Bone Guard | Cost 2 | ATK 2 | HP 5 | Counter 1 | Armor 1
+Night Stalker | Cost 3 | ATK 4 | HP 3 | Counter 0 | Quick, Execute 1
+Blood Witch | Cost 3 | ATK 3 | HP 4 | Counter 0 | Lifesteal 1, Poison 1
+Plague Hound | Cost 3 | ATK 4 | HP 4 | Counter 0 | Poison 1
+Dread Knight | Cost 4 | ATK 5 | HP 6 | Counter 2 | Tanpa keyword
+Soul Reaper | Cost 5 | ATK 6 | HP 5 | Counter 1 | Lifesteal 2
+Vampire Lord | Cost 6 | ATK 7 | HP 7 | Counter 1 | Lifesteal 2, Regen 1
+Lich Sovereign | Cost 7 | ATK 7 | HP 9 | Counter 1 | Regen 1, Splash 2
+Weakening Curse | Cost 2 | ongoing | persistent | row_attack_down
+Poison Mist | Cost 3 | ongoing | persistent | row_turn_damage
+Silence Seal | Cost 2 | ongoing | persistent | row_counter_down
+Ember Field | Cost 3 | shared | persistent | column_turn_damage
+
+=== Grove ===
+Seedling | Cost 1 | ATK 1 | HP 3 | Counter 0 | Regen 1
+Thornling | Cost 1 | ATK 1 | HP 4 | Counter 1 | Tanpa keyword
+Grove Healer | Cost 2 | ATK 1 | HP 4 | Counter 0 | Heal Row 1
+Thorn Defender | Cost 2 | ATK 2 | HP 5 | Counter 2 | Armor 1
+Barkhide Bear | Cost 3 | ATK 3 | HP 6 | Counter 1 | Armor 1
+Wind Falcon | Cost 3 | ATK 4 | HP 3 | Counter 0 | Quick
+Elder Shaman | Cost 4 | ATK 3 | HP 6 | Counter 1 | Regen 1, Heal Row 1
+Ancient Treant | Cost 5 | ATK 4 | HP 9 | Counter 2 | Armor 1, Regen 1
+Moon Stag | Cost 5 | ATK 6 | HP 6 | Counter 0 | Heal Hand 2
+Worldroot Colossus | Cost 7 | ATK 7 | HP 11 | Counter 2 | Armor 2, Regen 1
+Healing Light | Cost 2 | instant | instant | row_heal
+Renewal | Cost 2 | instant | instant | row_cleanse_heal
+Sacred Ground | Cost 3 | shared | persistent | column_armor
+War Drums | Cost 3 | shared | persistent | column_melee_attack
