@@ -1,0 +1,166 @@
+
+/* PNG CARD BACK + FULL HAND HOVER
+   Load after half-hands.css.
+*/
+
+.enemy-hand-card,
+.enemy-edge-hand .enemy-hand-card,
+.enemy-hand .enemy-hand-card,
+.hand-back-card,
+.draw-card,
+.card.face-down,
+.card-back.enemy-hidden,
+.card.is-hidden.enemy{
+  background-image:
+    url("../assets/cards/card_back.png"),
+    radial-gradient(circle at 50% 18%, rgba(177,218,255,.30), transparent 28%),
+    linear-gradient(145deg, #101b32 0%, #17294a 42%, #07101f 100%) !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  background-color:#101b32 !important;
+  border:1px solid rgba(198,228,255,.58) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.34),
+    0 0 0 1px rgba(130,185,255,.14) inset !important;
+  overflow:hidden !important;
+}
+
+.enemy-hand-card::before,
+.enemy-hand-card::after,
+.enemy-edge-hand .enemy-hand-card::before,
+.enemy-edge-hand .enemy-hand-card::after,
+.enemy-hand .enemy-hand-card::before,
+.enemy-hand .enemy-hand-card::after,
+.hand-back-card::before,
+.hand-back-card::after,
+.draw-card::before,
+.draw-card::after,
+.card.face-down::before,
+.card.face-down::after,
+.card-back.enemy-hidden::before,
+.card-back.enemy-hidden::after,
+.card.is-hidden.enemy::before,
+.card.is-hidden.enemy::after{
+  content:none !important;
+  display:none !important;
+  background:none !important;
+  box-shadow:none !important;
+}
+
+.card.face-down{
+  border-color:rgba(198,228,255,.58) !important;
+}
+
+.card.face-down .cost,
+.card.face-down .board-passive-icons{
+  display:none !important;
+}
+
+/* Both board deck piles use the PNG back on every stacked layer. */
+.deck-pile::before,
+.deck-pile::after,
+.deck-pile .pile-card{
+  background-image:
+    url("../assets/cards/card_back.png"),
+    radial-gradient(circle at 50% 18%, rgba(177,218,255,.30), transparent 28%),
+    linear-gradient(145deg, #101b32 0%, #17294a 42%, #07101f 100%) !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  background-color:#101b32 !important;
+  border-color:rgba(198,228,255,.42) !important;
+}
+
+.deck-pile::before{
+  filter:brightness(.62) saturate(.82) !important;
+}
+
+.deck-pile::after{
+  filter:brightness(.78) saturate(.9) !important;
+}
+
+.deck-pile .pile-card{
+  filter:none !important;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.34),
+    0 0 0 1px rgba(139,198,255,.12) inset !important;
+}
+
+/* Keep discard piles different from decks. */
+.discard-pile::before,
+.discard-pile::after,
+.discard-pile .pile-card{
+  background-image:none !important;
+}
+
+.bottom-ui,
+.hand-panel,
+.hand{
+  overflow:visible !important;
+}
+
+.hand .card{
+  position:relative !important;
+  transform-origin:center bottom !important;
+  aspect-ratio:var(--card-aspect-ratio,3 / 4) !important;
+  height:var(--edge-card-height,calc(116px * 4 / 3)) !important;
+  min-height:var(--edge-card-height,calc(116px * 4 / 3)) !important;
+  max-height:var(--edge-card-height,calc(116px * 4 / 3)) !important;
+  transition:
+    transform .2s cubic-bezier(.2,.78,.2,1),
+    filter .2s ease,
+    box-shadow .2s ease !important;
+  will-change:transform !important;
+}
+
+/* Full reveal above the bottom viewport edge, enlarged to 110%. */
+.hand .card:hover,
+.hand .card.hand-selected,
+.hand .card:focus-visible{
+  z-index:10050 !important;
+  transform:
+    translateY(
+      calc(
+        -1 * (
+          var(--edge-card-height,150px)
+          - var(--edge-hand-visible,92px)
+          + 24px
+        )
+      )
+    )
+    scale(1.10) !important;
+  filter:brightness(1.06) !important;
+  outline:none !important;
+  box-shadow:
+    0 0 0 3px rgba(211,235,255,.32),
+    0 28px 48px rgba(0,0,0,.64),
+    0 0 26px rgba(87,169,255,.18) !important;
+}
+
+/* Edge cards grow inward so they do not leave the viewport horizontally. */
+.hand .card:first-child{
+  transform-origin:left bottom !important;
+}
+
+.hand .card:last-child{
+  transform-origin:right bottom !important;
+}
+
+@media(max-height:620px){
+  .hand .card:hover,
+  .hand .card.hand-selected,
+  .hand .card:focus-visible{
+    transform:
+      translateY(
+        calc(
+          -1 * (
+            var(--edge-card-height,150px)
+            - var(--edge-hand-visible,92px)
+            + 18px
+          )
+        )
+      )
+      scale(1.06) !important;
+  }
+}

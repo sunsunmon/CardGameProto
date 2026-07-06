@@ -1,0 +1,7151 @@
+/* EDGE HANDS + HAND HEALTH
+   Full portrait cards protrude from the viewport edges.
+   The viewport itself crops the off-screen half; the hand containers do not mask cards.
+*/
+
+:root{
+  --card-aspect-ratio:3 / 4;
+  --edge-card-width:116px;
+  --edge-card-height:calc(var(--edge-card-width) * 4 / 3);
+  --edge-hand-visible:92px;
+  --edge-ui-left:140px;
+  --edge-ui-right:310px;
+}
+
+/* Heroes are removed visually; health now belongs to each hand. */
+.hero-side{
+  display:none !important;
+}
+
+.battlefield{
+  display:block !important;
+}
+
+.board{
+  position:relative !important;
+  width:min(700px,100%) !important;
+  margin-inline:auto !important;
+  overflow:visible !important;
+}
+
+/* Keep the board clear of the two edge hands. */
+.game-shell{
+  padding-top:calc(var(--edge-hand-visible) + 12px) !important;
+  padding-bottom:calc(var(--edge-hand-visible) + 16px) !important;
+}
+
+/* ---------------- Enemy edge hand ---------------- */
+
+.enemy-hand-ui{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:9200 !important;
+  pointer-events:none !important;
+}
+
+.enemy-energy-panel{
+  position:fixed !important;
+  top:10px !important;
+  left:12px !important;
+  z-index:4 !important;
+  width:116px !important;
+  min-height:72px !important;
+  padding:9px 10px !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  border-radius:15px !important;
+  background:rgba(7,12,24,.9) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.42) !important;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  text-align:center !important;
+  font-weight:950 !important;
+  pointer-events:auto !important;
+}
+
+.enemy-energy-panel > span{
+  display:block !important;
+  color:#d7deeb !important;
+  font-size:10px !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+}
+
+.enemy-energy-panel strong{
+  display:block !important;
+  margin-top:2px !important;
+  color:#ff8989 !important;
+  font-size:23px !important;
+}
+
+.enemy-energy-panel small{
+  color:#aab6ce !important;
+}
+
+.enemy-hand-panel{
+  position:fixed !important;
+  top:0 !important;
+  left:var(--edge-ui-left) !important;
+  right:var(--edge-ui-right) !important;
+  z-index:2 !important;
+  height:var(--edge-hand-visible) !important;
+  overflow:visible !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  border-top:0 !important;
+  border-radius:0 0 20px 20px !important;
+  background:linear-gradient(180deg,rgba(7,12,24,.96),rgba(15,22,38,.72)) !important;
+  box-shadow:0 15px 34px rgba(0,0,0,.4) !important;
+  pointer-events:auto !important;
+  isolation:isolate;
+}
+
+.enemy-hand{
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  top:calc(var(--edge-hand-visible) - var(--edge-card-height)) !important;
+  height:var(--edge-card-height) !important;
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  padding:0 104px 0 34px !important;
+  overflow:visible !important;
+  pointer-events:none !important;
+  z-index:2 !important;
+}
+
+.enemy-hand-card{
+  position:relative !important;
+  flex:0 0 auto !important;
+  width:var(--edge-card-width) !important;
+  height:var(--edge-card-height) !important;
+  min-width:var(--edge-card-width) !important;
+  min-height:var(--edge-card-height) !important;
+  margin-left:-38px !important;
+  overflow:hidden !important;
+  border:2px solid rgba(255,255,255,.22) !important;
+  border-radius:15px !important;
+  background:
+    radial-gradient(circle at 50% 48%,rgba(118,180,255,.31),transparent 23%),
+    repeating-conic-gradient(from 45deg,rgba(255,255,255,.06) 0deg 12deg,transparent 12deg 24deg),
+    linear-gradient(145deg,#2b4070,#101827 72%) !important;
+  box-shadow:0 13px 26px rgba(0,0,0,.46) !important;
+}
+
+.enemy-hand-card:first-child{
+  margin-left:0 !important;
+}
+
+.enemy-hand-card::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:9px !important;
+  border:2px solid rgba(255,255,255,.15) !important;
+  border-radius:10px !important;
+}
+
+.enemy-hand-card::after{
+  content:"✦" !important;
+  position:absolute !important;
+  inset:0 !important;
+  display:grid !important;
+  place-items:center !important;
+  color:rgba(255,255,255,.34) !important;
+  font-size:34px !important;
+  text-shadow:0 0 16px rgba(117,232,255,.42) !important;
+}
+
+.enemy-hand-card.new-card{
+  animation:enemyEdgeCardPop .38s ease !important;
+}
+
+.enemy-hand-spacer{
+  display:none !important;
+}
+
+/* ---------------- Player edge hand ---------------- */
+
+.bottom-ui{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:9200 !important;
+  display:block !important;
+  margin:0 !important;
+  pointer-events:none !important;
+}
+
+.energy-panel{
+  position:fixed !important;
+  left:12px !important;
+  bottom:10px !important;
+  z-index:4 !important;
+  width:116px !important;
+  min-height:72px !important;
+  padding:9px 10px !important;
+  border-radius:15px !important;
+  background:rgba(7,12,24,.92) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.42) !important;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  pointer-events:auto !important;
+}
+
+.hand-panel{
+  position:fixed !important;
+  left:var(--edge-ui-left) !important;
+  right:var(--edge-ui-right) !important;
+  bottom:0 !important;
+  z-index:2 !important;
+  width:auto !important;
+  height:var(--edge-hand-visible) !important;
+  padding:0 !important;
+  overflow:visible !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  border-bottom:0 !important;
+  border-radius:20px 20px 0 0 !important;
+  background:linear-gradient(0deg,rgba(7,12,24,.97),rgba(15,22,38,.73)) !important;
+  box-shadow:0 -15px 34px rgba(0,0,0,.4) !important;
+  pointer-events:auto !important;
+  isolation:isolate;
+}
+
+.hand{
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  top:0 !important;
+  width:auto !important;
+  height:var(--edge-card-height) !important;
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  justify-content:center !important;
+  align-items:flex-start !important;
+  gap:0 !important;
+  padding:0 104px 0 34px !important;
+  overflow:visible !important;
+  pointer-events:auto !important;
+  z-index:2 !important;
+}
+
+/* Full portrait card — not vertically scaled. The viewport crops the lower part. */
+.hand .card{
+  width:var(--edge-card-width) !important;
+  height:var(--edge-card-height) !important;
+  min-width:var(--edge-card-width) !important;
+  min-height:var(--edge-card-height) !important;
+  flex:0 0 auto !important;
+  margin-top:0 !important;
+  margin-left:-34px !important;
+  border-radius:15px !important;
+  transform:none !important;
+  overflow:visible !important;
+}
+
+.hand .card:first-child{
+  margin-left:0 !important;
+}
+
+.hand .card .cost{
+  display:flex !important;
+  left:-10px !important;
+  top:5px !important;
+  width:32px !important;
+  height:32px !important;
+  font-size:15px !important;
+  z-index:100 !important;
+}
+
+.hand .card .stats{
+  display:flex !important;
+  left:-8px !important;
+  top:43px !important;
+  z-index:110 !important;
+  font-size:13px !important;
+}
+
+.hand .card .stats .atk{
+  display:inline-flex !important;
+  color:var(--red) !important;
+}
+
+.hand .card .stats .hp{
+  display:inline-flex !important;
+  color:#8df58f !important;
+}
+
+.hand .card .card-info{
+  margin-left:0 !important;
+  margin-bottom:0 !important;
+  max-width:none !important;
+}
+
+.hand .card .name{
+  font-size:inherit !important;
+  overflow:visible !important;
+  white-space:normal !important;
+}
+
+.hand .card .type{
+  display:block !important;
+}
+
+/* Lift reveals more of the full card; the hand itself never masks it. */
+.hand .card:hover,
+.hand .card.hand-selected{
+  z-index:9999 !important;
+  transform:translateY(-36px) scale(1.035) !important;
+  box-shadow:0 0 0 3px rgba(255,255,255,.28),0 24px 42px rgba(0,0,0,.58) !important;
+}
+
+/* ---------------- Hand HP / direct-attack target ---------------- */
+
+.hand-health-badge{
+  position:absolute;
+  z-index:6;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  width:78px;
+  min-height:62px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:2px solid rgba(255,255,255,.22);
+  border-radius:18px;
+  background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(255,255,255,.055));
+  box-shadow:0 10px 24px rgba(0,0,0,.38);
+  pointer-events:none;
+}
+
+.hand-health-badge span{
+  color:#bdc9dc;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+
+.hand-health-badge strong{
+  margin-top:2px;
+  color:#ff7c7c;
+  font-size:29px;
+  line-height:1;
+  font-weight:950;
+}
+
+.player-hand-target .hand-health-badge strong{
+  color:#7ee5ff;
+}
+
+.hand-target-zone.target,
+.hand-target-zone.valid-target{
+  cursor:crosshair !important;
+}
+
+.hand-target-zone.target::after{
+  content:"";
+  position:absolute;
+  z-index:5;
+  inset:5px;
+  border:3px dashed var(--gold);
+  border-radius:16px;
+  pointer-events:none;
+  animation:handTargetPulse .7s ease-in-out infinite alternate;
+  filter:drop-shadow(0 0 8px rgba(255,214,82,.7));
+}
+
+.hand-target-zone.attack-hover-target{
+  box-shadow:0 0 0 4px rgba(255,104,104,.55),0 0 35px rgba(255,104,104,.35) !important;
+}
+
+.hand-target-zone.impact-flash{
+  animation:handImpact .34s ease !important;
+}
+
+/* ---------------- End Turn — middle-right of board ---------------- */
+
+.end-turn-wrap{
+  position:absolute !important;
+  left:calc(100% + 18px) !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  transform:translateY(-50%) !important;
+  width:108px !important;
+  z-index:80 !important;
+  pointer-events:auto !important;
+}
+
+/* Full-size draw card; it only becomes cropped after joining an edge hand. */
+.draw-card.half-hand-draw{
+  width:var(--edge-card-width) !important;
+  height:var(--edge-card-height) !important;
+  border-radius:15px !important;
+}
+
+@keyframes enemyEdgeCardPop{
+  0%{transform:translateY(-22px) scale(.9);opacity:.15}
+  70%{transform:translateY(4px) scale(1.035);opacity:1}
+  100%{transform:translateY(0) scale(1);opacity:1}
+}
+
+@keyframes handTargetPulse{
+  from{opacity:.58;transform:scale(.992)}
+  to{opacity:1;transform:scale(1)}
+}
+
+@keyframes handImpact{
+  0%{filter:brightness(1);transform:translateY(0)}
+  35%{filter:brightness(2);transform:translateY(5px)}
+  100%{filter:brightness(1);transform:translateY(0)}
+}
+
+body.utility-collapsed{
+  --edge-ui-right:14px;
+}
+
+@media(max-width:1200px){
+  :root{
+    --edge-ui-right:270px;
+  }
+
+  body.utility-collapsed{
+    --edge-ui-right:14px;
+  }
+}
+
+@media(max-width:980px){
+  :root{
+    --edge-ui-left:116px;
+    --edge-ui-right:12px;
+    --edge-hand-visible:86px;
+  }
+
+  .game-shell{
+    padding-top:98px !important;
+    padding-bottom:102px !important;
+  }
+
+  .enemy-energy-panel,
+  .energy-panel{
+    left:6px !important;
+    width:98px !important;
+    min-width:98px !important;
+  }
+
+  .enemy-hand,
+  .hand{
+    justify-content:flex-start !important;
+    padding-left:24px !important;
+  }
+
+  .end-turn-wrap{
+    left:auto !important;
+    right:8px !important;
+    transform:translateY(-50%) scale(.82) !important;
+    transform-origin:right center !important;
+  }
+
+  .board{
+    padding-right:104px !important;
+  }
+}
+
+
+/* =========================================================
+   vNEXT — centered hand status, card top gap, clean spell text,
+   and playable-energy indicator
+   ========================================================= */
+
+/* Energy + HP are attached to the centered hand containers,
+   no longer pinned to the far left/right edges of the screen. */
+.enemy-hand-panel > .enemy-energy-panel,
+.hand-panel > .energy-panel{
+  position:absolute !important;
+  left:12px !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  transform:translateY(-50%) !important;
+  z-index:8 !important;
+  width:78px !important;
+  min-width:78px !important;
+  min-height:62px !important;
+  padding:7px 8px !important;
+  border-radius:16px !important;
+  pointer-events:auto !important;
+}
+
+.enemy-hand-panel > .enemy-energy-panel strong,
+.hand-panel > .energy-panel strong{
+  font-size:21px !important;
+}
+
+.enemy-hand-panel > .enemy-energy-panel > span,
+.hand-panel > .energy-panel > span{
+  font-size:9px !important;
+}
+
+/* Reserve equal space for Energy on the left and HP on the right. */
+.enemy-hand{
+  padding-left:110px !important;
+  padding-right:110px !important;
+}
+
+.hand{
+  top:8px !important;
+  padding-left:110px !important;
+  padding-right:110px !important;
+}
+
+/* A little breathing room between normal cards and the upper hand edge.
+   Hover still lifts the full card farther out of the screen edge. */
+.hand .card{
+  margin-top:0 !important;
+}
+
+.hand .card:hover,
+.hand .card.hand-selected{
+  transform:translateY(-42px) scale(1.035) !important;
+}
+
+/* Remove both occurrences of TRAP / SHARED from those spell cards:
+   the small type text and the secondary stats text. */
+.card.spell-trap .type,
+.card.spell-shared .type,
+.card.spell-trap .stats .hp,
+.card.spell-shared .stats .hp{
+  display:none !important;
+}
+
+/* Cost circle: only cards that are affordable AND currently playable pulse. */
+.hand .card .cost{
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease,
+    filter .18s ease,
+    opacity .18s ease,
+    transform .18s ease !important;
+}
+
+.hand .card.playable-now .cost{
+  color:#ffffff !important;
+  border-color:#88ffb3 !important;
+  background:
+    radial-gradient(circle at 38% 30%,#86ffd0 0%,#35bf7c 38%,#13754b 100%) !important;
+  box-shadow:
+    0 0 0 2px rgba(116,255,170,.28),
+    0 0 14px rgba(98,255,159,.9),
+    0 0 30px rgba(98,255,159,.42),
+    inset 0 1px 4px rgba(255,255,255,.58) !important;
+  animation:playableEnergyPulse 1.05s ease-in-out infinite !important;
+}
+
+.hand .card.playable-now .cost::after{
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border:2px solid rgba(116,255,170,.64);
+  border-radius:50%;
+  pointer-events:none;
+  animation:playableEnergyRing 1.05s ease-out infinite;
+}
+
+.hand .card:not(.playable-now) .cost{
+  box-shadow:0 5px 12px rgba(0,0,0,.38) !important;
+}
+
+.hand .card.invalid .cost,
+.hand .card.not-playable-now .cost{
+  filter:saturate(.55) brightness(.72);
+  opacity:.82;
+}
+
+@keyframes playableEnergyPulse{
+  0%,100%{
+    transform:scale(1);
+    filter:brightness(1);
+  }
+  50%{
+    transform:scale(1.11);
+    filter:brightness(1.22);
+  }
+}
+
+@keyframes playableEnergyRing{
+  0%{
+    opacity:.75;
+    transform:scale(.78);
+  }
+  70%{
+    opacity:0;
+    transform:scale(1.32);
+  }
+  100%{
+    opacity:0;
+    transform:scale(1.32);
+  }
+}
+
+@media(max-width:980px){
+  .enemy-hand-panel > .enemy-energy-panel,
+  .hand-panel > .energy-panel{
+    left:7px !important;
+    width:68px !important;
+    min-width:68px !important;
+  }
+
+  .enemy-hand,
+  .hand{
+    padding-left:90px !important;
+    padding-right:90px !important;
+  }
+}
+
+
+/* =========================================================
+   SUBTLE BLUE PLAYABLE ENERGY + INTEGRATED HAND STATUS
+   + COLORED BOARD SLOT FILL
+   ========================================================= */
+
+/* ---------- Main Energy / HP tabs integrated into the hand ---------- */
+
+.enemy-hand-panel > .enemy-energy-panel,
+.hand-panel > .energy-panel,
+.hand-health-badge{
+  width:auto !important;
+  min-width:94px !important;
+  min-height:46px !important;
+  height:46px !important;
+  padding:6px 12px 6px 40px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+  gap:0 !important;
+  border:1px solid rgba(255,255,255,.15) !important;
+  border-radius:23px !important;
+  background:
+    linear-gradient(145deg,rgba(20,31,54,.96),rgba(8,14,27,.94)) !important;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+/* Energy tab on left side of centered hand. */
+.enemy-hand-panel > .enemy-energy-panel,
+.hand-panel > .energy-panel{
+  left:10px !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  transform:translateY(-50%) !important;
+  color:#9bd7ff !important;
+  border-color:rgba(91,178,255,.28) !important;
+}
+
+.enemy-hand-panel > .enemy-energy-panel::before,
+.hand-panel > .energy-panel::before{
+  content:"◆";
+  position:absolute;
+  left:13px;
+  top:50%;
+  transform:translateY(-50%) rotate(45deg);
+  color:#77c7ff;
+  font-size:19px;
+  line-height:1;
+  text-shadow:0 0 9px rgba(79,181,255,.52);
+}
+
+.enemy-hand-panel > .enemy-energy-panel > span,
+.hand-panel > .energy-panel > span{
+  color:#7f9ab9 !important;
+  font-size:8px !important;
+  font-weight:900 !important;
+  line-height:1 !important;
+  letter-spacing:.13em !important;
+}
+
+.enemy-hand-panel > .enemy-energy-panel strong,
+.hand-panel > .energy-panel strong{
+  margin-top:3px !important;
+  color:#d9f1ff !important;
+  font-size:20px !important;
+  line-height:1 !important;
+  text-shadow:0 0 9px rgba(78,178,255,.24);
+}
+
+.enemy-hand-panel > .enemy-energy-panel small,
+.hand-panel > .energy-panel small{
+  display:none !important;
+}
+
+/* HP tab on right side of centered hand. */
+.hand-health-badge{
+  right:10px !important;
+  left:auto !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  pointer-events:none !important;
+  border-color:rgba(255,111,124,.25) !important;
+}
+
+.hand-health-badge::before{
+  content:"♥";
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-52%);
+  color:#ff7885;
+  font-size:21px;
+  line-height:1;
+  text-shadow:0 0 9px rgba(255,91,108,.45);
+}
+
+.hand-health-badge span{
+  color:#9f8590 !important;
+  font-size:8px !important;
+  line-height:1 !important;
+  letter-spacing:.13em !important;
+}
+
+.hand-health-badge strong,
+.player-hand-target .hand-health-badge strong{
+  margin-top:3px !important;
+  color:#ffd9dd !important;
+  font-size:21px !important;
+  line-height:1 !important;
+  text-shadow:0 0 9px rgba(255,91,108,.22);
+}
+
+/* Keep enough clear space for the two integrated status tabs. */
+.enemy-hand,
+.hand{
+  padding-left:122px !important;
+  padding-right:122px !important;
+}
+
+/* ---------- Subtle blue playable card Energy cost ---------- */
+
+/* Completely neutralize the previous green/ring treatment. */
+.hand .card.playable-now .cost{
+  color:#ffffff !important;
+  border-color:rgba(137,207,255,.92) !important;
+  background:
+    radial-gradient(circle at 35% 28%,#9bdcff 0%,#438cd7 40%,#244e8b 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(126,198,255,.18),
+    0 0 9px rgba(74,169,255,.46),
+    inset 0 1px 3px rgba(255,255,255,.38) !important;
+  animation:playableEnergyPulseSoft 1.9s ease-in-out infinite !important;
+}
+
+.hand .card.playable-now .cost::after{
+  content:none !important;
+  display:none !important;
+  animation:none !important;
+}
+
+.hand .card:not(.playable-now) .cost{
+  border-color:rgba(126,174,225,.5) !important;
+  background:
+    radial-gradient(circle at 35% 28%,#6398cd 0%,#315d96 43%,#1d365e 100%) !important;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.34),
+    inset 0 1px 2px rgba(255,255,255,.18) !important;
+}
+
+.hand .card.invalid .cost,
+.hand .card.not-playable-now .cost{
+  filter:saturate(.72) brightness(.7) !important;
+  opacity:.82 !important;
+  animation:none !important;
+}
+
+@keyframes playableEnergyPulseSoft{
+  0%,100%{
+    transform:scale(1);
+    filter:brightness(1);
+    box-shadow:
+      0 0 0 1px rgba(126,198,255,.16),
+      0 0 7px rgba(74,169,255,.34),
+      inset 0 1px 3px rgba(255,255,255,.34);
+  }
+  50%{
+    transform:scale(1.025);
+    filter:brightness(1.08);
+    box-shadow:
+      0 0 0 1px rgba(126,198,255,.24),
+      0 0 12px rgba(74,169,255,.52),
+      inset 0 1px 3px rgba(255,255,255,.42);
+  }
+}
+
+/* ---------- Board slot semantic fills ---------- */
+
+/* Creature slots: subtle blue fill. */
+.slot.creature-slot:not(.drop-valid):not(.drop-hover):not(.target){
+  background:
+    linear-gradient(145deg,rgba(51,118,210,.13),rgba(32,77,143,.075)) !important;
+  border-color:rgba(104,165,238,.28) !important;
+}
+
+.slot.creature-slot:not(.drop-valid):not(.drop-hover):not(.target)::before{
+  border-color:rgba(113,177,248,.38) !important;
+  box-shadow:0 0 10px rgba(67,145,235,.09);
+}
+
+/* Every spell slot, including player, enemy and shared: subtle red fill. */
+.slot.spell-slot:not(.drop-valid):not(.drop-hover):not(.target){
+  background:
+    linear-gradient(145deg,rgba(190,57,75,.13),rgba(116,34,53,.075)) !important;
+  border-color:rgba(226,101,117,.28) !important;
+}
+
+.slot.spell-slot:not(.drop-valid):not(.drop-hover):not(.target)::before{
+  border-color:rgba(234,116,132,.38) !important;
+  box-shadow:0 0 10px rgba(215,71,92,.09);
+}
+
+/* Occupied slots stay tinted softly behind the card. */
+.slot.creature-slot:has(.card):not(.target){
+  background:rgba(45,104,184,.09) !important;
+}
+
+.slot.spell-slot:has(.card):not(.target){
+  background:rgba(165,48,67,.09) !important;
+}
+
+/* Preserve gameplay feedback colors above the new base fills. */
+.slot.drop-valid{
+  background:rgba(98,255,159,.12) !important;
+}
+
+.slot.drop-hover{
+  background:rgba(255,240,108,.18) !important;
+}
+
+.slot.target{
+  background:rgba(255,214,82,.1) !important;
+}
+
+@media(max-width:980px){
+  .enemy-hand-panel > .enemy-energy-panel,
+  .hand-panel > .energy-panel,
+  .hand-health-badge{
+    min-width:78px !important;
+    padding-left:35px !important;
+    padding-right:8px !important;
+  }
+
+  .enemy-hand-panel > .enemy-energy-panel::before,
+  .hand-panel > .energy-panel::before,
+  .hand-health-badge::before{
+    left:11px !important;
+  }
+
+  .enemy-hand,
+  .hand{
+    padding-left:102px !important;
+    padding-right:102px !important;
+  }
+}
+
+
+/* =========================================================
+   STATUS ORDER: HP -> ENERGY -> CARDS
+   Applies to both Player and Enemy hand containers.
+   ========================================================= */
+
+.enemy-hand-panel,
+.hand-panel{
+  --status-left:10px;
+  --status-width:100px;
+  --status-gap:8px;
+  --cards-start:226px;
+}
+
+/* HP is the first capsule on the left. */
+.enemy-hand-panel > .hand-health-badge,
+.hand-panel > .hand-health-badge{
+  left:var(--status-left) !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  width:var(--status-width) !important;
+  min-width:var(--status-width) !important;
+  transform:translateY(-50%) !important;
+}
+
+/* Energy sits directly after HP. */
+.enemy-hand-panel > .enemy-energy-panel,
+.hand-panel > .energy-panel{
+  left:calc(
+    var(--status-left) +
+    var(--status-width) +
+    var(--status-gap)
+  ) !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  width:var(--status-width) !important;
+  min-width:var(--status-width) !important;
+  transform:translateY(-50%) !important;
+}
+
+/* Cards begin after both status capsules. */
+.enemy-hand,
+.hand{
+  justify-content:flex-start !important;
+  padding-left:var(--cards-start) !important;
+  padding-right:28px !important;
+}
+
+/* Keep the first card from overlapping the Energy capsule. */
+.enemy-hand-card:first-child,
+.hand .card:first-child{
+  margin-left:0 !important;
+}
+
+@media(max-width:980px){
+  .enemy-hand-panel,
+  .hand-panel{
+    --status-left:7px;
+    --status-width:84px;
+    --status-gap:6px;
+    --cards-start:190px;
+  }
+
+  .enemy-hand-panel > .hand-health-badge,
+  .hand-panel > .hand-health-badge,
+  .enemy-hand-panel > .enemy-energy-panel,
+  .hand-panel > .energy-panel{
+    padding-left:34px !important;
+    padding-right:7px !important;
+  }
+
+  .enemy-hand,
+  .hand{
+    padding-right:18px !important;
+  }
+}
+
+
+/* =========================================================
+   CENTERED HAND CONTAINER
+   Hand backgrounds no longer span across the screen.
+   ========================================================= */
+
+.enemy-hand-panel,
+.hand-panel{
+  left:50% !important;
+  right:auto !important;
+  width:min(900px,calc(100vw - 120px)) !important;
+  max-width:900px !important;
+  transform:translateX(-50%) !important;
+}
+
+/* Keep the hand content centered as one compact group. */
+.enemy-hand,
+.hand{
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 auto !important;
+}
+
+/* Outer fixed wrappers remain transparent and non-interactive. */
+.enemy-hand-ui,
+.bottom-ui{
+  background:transparent !important;
+  pointer-events:none !important;
+}
+
+.enemy-hand-panel,
+.hand-panel,
+.enemy-hand-panel *,
+.hand-panel *{
+  pointer-events:auto;
+}
+
+@media(max-width:980px){
+  .enemy-hand-panel,
+  .hand-panel{
+    width:calc(100vw - 72px) !important;
+    max-width:none !important;
+  }
+}
+
+@media(max-width:700px){
+  .enemy-hand-panel,
+  .hand-panel{
+    width:calc(100vw - 28px) !important;
+  }
+}
+
+
+/* =========================================================
+   SPELL SLOT SCALE — 80%
+   Creature slots remain unchanged.
+   All private and shared spell slots are visually smaller.
+   ========================================================= */
+
+.board .slot.spell-slot,
+.board .slot.spell,
+.board .slot.shared,
+.board .slot.player-spell{
+  width:69px !important;
+  min-width:69px !important;
+  max-width:69px !important;
+  min-height:86px !important;
+  height:86px !important;
+  aspect-ratio:3 / 4 !important;
+  justify-self:center !important;
+  align-self:center !important;
+}
+
+/* Spell cards inside board slots also use the smaller size. */
+.board .slot.spell-slot .card,
+.board .slot.spell .card,
+.board .slot.shared .card,
+.board .slot.player-spell .card{
+  width:61px !important;
+  min-width:61px !important;
+  max-width:61px !important;
+  height:77px !important;
+  min-height:77px !important;
+  max-height:77px !important;
+  border-radius:10px !important;
+}
+
+/* Smaller empty-slot circle symbol. */
+.board .slot.spell-slot::before,
+.board .slot.spell::before,
+.board .slot.shared::before,
+.board .slot.player-spell::before{
+  width:18px !important;
+  height:18px !important;
+  border-width:2px !important;
+}
+
+/* Keep spell text and stats readable at the reduced board size. */
+.board .slot.spell-slot .card .name,
+.board .slot.spell .card .name,
+.board .slot.shared .card .name,
+.board .slot.player-spell .card .name{
+  font-size:9px !important;
+}
+
+.board .slot.spell-slot .card .stats,
+.board .slot.spell .card .stats,
+.board .slot.shared .card .stats,
+.board .slot.player-spell .card .stats{
+  font-size:10px !important;
+}
+
+
+/* =========================================================
+   COUNTER STAT VISUAL
+   ========================================================= */
+
+.card .stats .counter{
+  color:#ffc86f !important;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.92),
+    0 0 7px rgba(255,179,71,.24);
+}
+
+.hand .card .stats .counter{
+  display:inline-flex !important;
+  align-items:center;
+  gap:2px;
+}
+
+.board .slot .card .stats{
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  white-space:nowrap !important;
+  gap:3px !important;
+  align-items:center !important;
+}
+
+.board .slot .card .stats .counter{
+  font-size:9px !important;
+}
+
+.card .stats .duration{
+  font-size:8px !important;
+  color:#ffe08a !important;
+  font-weight:700 !important;
+  white-space:nowrap !important;
+}
+
+/* Inspector Counter chip. */
+.inspect-stat.counter{
+  color:#ffc86f !important;
+}
+
+
+/* =========================================================
+   VERTICAL STATUS RAIL
+   Order:
+   Enemy HP -> Enemy Energy -> End Turn -> Player Energy -> Player HP
+   ========================================================= */
+
+.vertical-status-rail{
+  position:absolute !important;
+  left:calc(100% + 18px) !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  transform:translateY(-50%) !important;
+  z-index:110 !important;
+
+  width:112px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  justify-content:center !important;
+  gap:8px !important;
+
+  pointer-events:none !important;
+}
+
+/* Reset the status capsules after moving them out of the hand containers. */
+.vertical-status-rail > .hand-health-badge,
+.vertical-status-rail > .enemy-energy-panel,
+.vertical-status-rail > .energy-panel{
+  position:relative !important;
+  inset:auto !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  transform:none !important;
+
+  box-sizing:border-box !important;
+  width:112px !important;
+  min-width:112px !important;
+  max-width:112px !important;
+  height:48px !important;
+  min-height:48px !important;
+
+  margin:0 !important;
+  padding:6px 10px 6px 39px !important;
+  border-radius:16px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:center !important;
+
+  pointer-events:auto !important;
+}
+
+/* Keep the End Turn button centered in the same vertical rail. */
+.vertical-status-rail > .end-turn-wrap{
+  position:relative !important;
+  inset:auto !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  transform:none !important;
+
+  width:112px !important;
+  min-width:112px !important;
+  height:auto !important;
+  margin:3px 0 !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  pointer-events:auto !important;
+}
+
+/* Enemy HP */
+.vertical-status-rail > .enemy-hp-status{
+  order:1 !important;
+  border-color:rgba(255,91,108,.34) !important;
+}
+
+.vertical-status-rail > .enemy-hp-status strong{
+  color:#ffabb4 !important;
+}
+
+/* Enemy Energy */
+.vertical-status-rail > .enemy-energy-status{
+  order:2 !important;
+  border-color:rgba(171,118,255,.34) !important;
+}
+
+.vertical-status-rail > .enemy-energy-status::before{
+  color:#bd92ff !important;
+  text-shadow:0 0 9px rgba(158,92,255,.55) !important;
+}
+
+/* End Turn */
+.vertical-status-rail > .end-turn-wrap{
+  order:3 !important;
+}
+
+/* Player Energy */
+.vertical-status-rail > .player-energy-status{
+  order:4 !important;
+  border-color:rgba(91,178,255,.34) !important;
+}
+
+/* Player HP */
+.vertical-status-rail > .player-hp-status{
+  order:5 !important;
+  border-color:rgba(89,208,255,.34) !important;
+}
+
+.vertical-status-rail > .player-hp-status::before{
+  color:#68dcff !important;
+  text-shadow:0 0 9px rgba(69,196,255,.48) !important;
+}
+
+.vertical-status-rail > .player-hp-status strong{
+  color:#a9ecff !important;
+  text-shadow:0 0 9px rgba(69,196,255,.27) !important;
+}
+
+/* Remove status padding from both hand containers.
+   The hands now contain cards only. */
+.enemy-hand-panel,
+.hand-panel{
+  --cards-start:0px !important;
+}
+
+.enemy-hand,
+.hand{
+  justify-content:center !important;
+  padding-left:28px !important;
+  padding-right:28px !important;
+}
+
+/* Old direct positioning no longer applies because statuses live in the rail. */
+.enemy-hand-panel > .enemy-energy-panel,
+.hand-panel > .energy-panel,
+.enemy-hand-panel > .hand-health-badge,
+.hand-panel > .hand-health-badge{
+  position:relative !important;
+}
+
+/* Keep board space available for the vertical rail on narrower screens. */
+@media(max-width:980px){
+  .vertical-status-rail{
+    left:auto !important;
+    right:6px !important;
+    transform:translateY(-50%) scale(.86) !important;
+    transform-origin:right center !important;
+  }
+
+  .board{
+    padding-right:108px !important;
+  }
+
+  .enemy-hand,
+  .hand{
+    padding-left:18px !important;
+    padding-right:18px !important;
+  }
+}
+
+@media(max-height:700px){
+  .vertical-status-rail{
+    gap:5px !important;
+    transform:translateY(-50%) scale(.88) !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    margin:0 !important;
+  }
+}
+
+
+/* =========================================================
+   VERTICAL STATUS RAIL — ICON ONLY + CLEAN GAP
+   ========================================================= */
+
+.vertical-status-rail{
+  width:96px !important;
+  gap:5px !important;
+  align-items:center !important;
+}
+
+/* Compact status capsules */
+.vertical-status-rail > .hand-health-badge,
+.vertical-status-rail > .enemy-energy-panel,
+.vertical-status-rail > .energy-panel{
+  width:96px !important;
+  min-width:96px !important;
+  max-width:96px !important;
+  height:42px !important;
+  min-height:42px !important;
+
+  padding:0 10px 0 34px !important;
+  margin:0 !important;
+  border-radius:14px !important;
+
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:0 !important;
+}
+
+/* Hide all text labels. Keep only the icon and numeric value. */
+.vertical-status-rail > .hand-health-badge > span,
+.vertical-status-rail > .enemy-energy-panel > span,
+.vertical-status-rail > .energy-panel > span,
+.vertical-status-rail > .enemy-energy-panel > small,
+.vertical-status-rail > .energy-panel > small{
+  display:none !important;
+}
+
+/* Numeric values */
+.vertical-status-rail > .hand-health-badge strong,
+.vertical-status-rail > .enemy-energy-panel strong,
+.vertical-status-rail > .energy-panel strong{
+  width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  text-align:center !important;
+  font-size:19px !important;
+  line-height:1 !important;
+  letter-spacing:0 !important;
+}
+
+/* Icon placement */
+.vertical-status-rail > .hand-health-badge::before,
+.vertical-status-rail > .enemy-energy-panel::before,
+.vertical-status-rail > .energy-panel::before{
+  position:absolute !important;
+  left:11px !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  width:18px !important;
+  text-align:center !important;
+  font-size:18px !important;
+  line-height:1 !important;
+}
+
+/* Heart icon */
+.vertical-status-rail > .hand-health-badge::before{
+  content:"♥" !important;
+}
+
+/* Energy icon */
+.vertical-status-rail > .enemy-energy-panel::before,
+.vertical-status-rail > .energy-panel::before{
+  content:"◆" !important;
+  transform:translateY(-50%) rotate(45deg) !important;
+  font-size:16px !important;
+}
+
+/* Cleaner separation around End Turn */
+.vertical-status-rail > .end-turn-wrap{
+  width:96px !important;
+  min-width:96px !important;
+  margin:7px 0 !important;
+}
+
+/* Keep exact order */
+.vertical-status-rail > .enemy-hp-status{
+  order:1 !important;
+}
+
+.vertical-status-rail > .enemy-energy-status{
+  order:2 !important;
+}
+
+.vertical-status-rail > .end-turn-wrap{
+  order:3 !important;
+}
+
+.vertical-status-rail > .player-energy-status{
+  order:4 !important;
+}
+
+.vertical-status-rail > .player-hp-status{
+  order:5 !important;
+}
+
+@media(max-height:700px){
+  .vertical-status-rail{
+    gap:3px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    height:38px !important;
+    min-height:38px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    margin:4px 0 !important;
+  }
+}
+
+
+/* =========================================================
+   LEFT VERTICAL PHASE INDICATOR
+   ========================================================= */
+
+.phase-status-rail{
+  position:absolute !important;
+  right:calc(100% + 18px) !important;
+  left:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  transform:translateY(-50%) !important;
+  z-index:110 !important;
+
+  width:58px !important;
+  min-width:58px !important;
+  height:196px !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  pointer-events:none !important;
+}
+
+.phase-status-rail > .vertical-phase-badge{
+  position:relative !important;
+  inset:auto !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  transform:none !important;
+
+  width:50px !important;
+  min-width:50px !important;
+  height:188px !important;
+  min-height:188px !important;
+
+  margin:0 !important;
+  padding:12px 8px !important;
+  box-sizing:border-box !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border-radius:18px !important;
+  border:1px solid rgba(151,202,255,.30) !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(25,45,74,.94),
+      rgba(8,17,32,.96)
+    ) !important;
+
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.38),
+    0 0 0 1px rgba(116,181,255,.08) inset !important;
+
+  color:#dceeff !important;
+  text-transform:uppercase !important;
+  text-align:center !important;
+
+  writing-mode:vertical-rl !important;
+  text-orientation:upright !important;
+  letter-spacing:3px !important;
+  line-height:1 !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+
+  pointer-events:auto !important;
+}
+
+/* Enemy phase uses a warmer accent. */
+.phase-status-rail > .vertical-phase-badge.enemy-phase{
+  color:#ffb3bc !important;
+  border-color:rgba(255,91,108,.36) !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.38),
+    0 0 22px rgba(255,72,98,.12),
+    0 0 0 1px rgba(255,110,126,.10) inset !important;
+}
+
+/* Player phase uses the blue accent. */
+.phase-status-rail > .vertical-phase-badge.player-phase{
+  color:#bdeaff !important;
+  border-color:rgba(84,194,255,.38) !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.38),
+    0 0 22px rgba(54,182,255,.13),
+    0 0 0 1px rgba(98,200,255,.10) inset !important;
+}
+
+/* Remove Player Action / Enemy Action beside End Turn. */
+#timerStatus,
+.vertical-status-rail .timer-status,
+.end-turn-wrap .timer-status{
+  display:none !important;
+}
+
+/* End Turn wrapper no longer reserves space for action text. */
+.vertical-status-rail > .end-turn-wrap{
+  gap:0 !important;
+  padding:0 !important;
+}
+
+@media(max-width:980px){
+  .phase-status-rail{
+    right:auto !important;
+    left:6px !important;
+    transform:translateY(-50%) scale(.86) !important;
+    transform-origin:left center !important;
+  }
+
+  .board{
+    padding-left:72px !important;
+  }
+}
+
+@media(max-height:700px){
+  .phase-status-rail{
+    transform:translateY(-50%) scale(.88) !important;
+  }
+}
+
+
+/* =========================================================
+   PHASE TEXT — SINGLE VERTICAL COLUMN
+   P
+   L
+   A
+   Y
+   E
+   R
+
+   P
+   H
+   A
+   S
+   E
+   ========================================================= */
+
+.phase-status-rail{
+  width:54px !important;
+  min-width:54px !important;
+  height:230px !important;
+}
+
+.phase-status-rail > .vertical-phase-badge{
+  width:50px !important;
+  min-width:50px !important;
+  height:224px !important;
+  min-height:224px !important;
+
+  /* Narrow content area forces exactly one character per line. */
+  padding:12px 17px !important;
+  box-sizing:border-box !important;
+
+  writing-mode:horizontal-tb !important;
+  text-orientation:mixed !important;
+
+  white-space:normal !important;
+  word-break:break-all !important;
+  overflow-wrap:anywhere !important;
+
+  text-align:center !important;
+  letter-spacing:0 !important;
+  line-height:1.08 !important;
+  font-size:14px !important;
+
+  display:block !important;
+}
+
+/* Keep the single column centered inside the vertical button. */
+.phase-status-rail > .vertical-phase-badge{
+  text-align:center !important;
+}
+
+
+/* =========================================================
+   PHASE LABEL — NO CONTAINER, FULL BOARD HEIGHT
+   ========================================================= */
+
+.phase-status-rail{
+  position:absolute !important;
+  right:calc(100% + 8px) !important;
+  left:auto !important;
+  top:10px !important;
+  bottom:10px !important;
+  width:42px !important;
+  min-width:42px !important;
+  height:auto !important;
+  min-height:0 !important;
+  transform:none !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  background:none !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+.phase-status-rail > .vertical-phase-badge{
+  position:relative !important;
+  inset:auto !important;
+
+  width:42px !important;
+  min-width:42px !important;
+  height:100% !important;
+  min-height:0 !important;
+
+  padding:0 !important;
+  margin:0 !important;
+
+  background:none !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  writing-mode:vertical-rl !important;
+  text-orientation:upright !important;
+
+  white-space:nowrap !important;
+  word-break:normal !important;
+  overflow-wrap:normal !important;
+
+  text-align:center !important;
+  font-size:clamp(22px,3.1vh,34px) !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  letter-spacing:clamp(2px,.6vh,6px) !important;
+
+  background-clip:text !important;
+  -webkit-background-clip:text !important;
+}
+
+/* Player phase */
+.phase-status-rail > .vertical-phase-badge.player-phase{
+  color:#aee8ff !important;
+  text-shadow:
+    0 0 8px rgba(74,194,255,.48),
+    0 2px 3px rgba(0,0,0,.9) !important;
+}
+
+/* Enemy phase */
+.phase-status-rail > .vertical-phase-badge.enemy-phase{
+  color:#ffadb8 !important;
+  text-shadow:
+    0 0 8px rgba(255,78,103,.46),
+    0 2px 3px rgba(0,0,0,.9) !important;
+}
+
+@media(max-width:980px){
+  .phase-status-rail{
+    left:4px !important;
+    right:auto !important;
+    top:8px !important;
+    bottom:8px !important;
+    transform:none !important;
+  }
+
+  .board{
+    padding-left:54px !important;
+  }
+}
+
+@media(max-height:700px){
+  .phase-status-rail{
+    top:6px !important;
+    bottom:6px !important;
+    transform:none !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    font-size:clamp(18px,2.7vh,27px) !important;
+    letter-spacing:2px !important;
+  }
+}
+
+
+/* =========================================================
+   PHASE LABEL FINAL — NO CONTAINER / MUTED CREATURE-SLOT BLUE
+   ========================================================= */
+
+/* Remove every possible visual container layer */
+#phaseStatusRail,
+.phase-status-rail,
+.phase-status-rail::before,
+.phase-status-rail::after,
+#phaseText,
+.vertical-phase-badge,
+.vertical-phase-badge::before,
+.vertical-phase-badge::after{
+  background:transparent !important;
+  background-image:none !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* The rail itself is only an invisible positioning wrapper */
+#phaseStatusRail,
+.phase-status-rail{
+  padding:0 !important;
+  margin:0 !important;
+  overflow:visible !important;
+  pointer-events:none !important;
+}
+
+/* Text only — no capsule, no panel, no glow */
+#phaseText.vertical-phase-badge,
+.phase-status-rail > .vertical-phase-badge{
+  position:relative !important;
+  width:42px !important;
+  height:100% !important;
+  overflow:visible !important;
+  clip:auto !important;
+  clip-path:none !important;
+  white-space:nowrap !important;
+  padding:0 !important;
+  margin:0 !important;
+
+  color:rgba(116,166,194,.72) !important;
+  -webkit-text-fill-color:rgba(116,166,194,.72) !important;
+
+  text-shadow:
+    0 1px 1px rgba(0,0,0,.42) !important;
+
+  opacity:.82 !important;
+
+  background:transparent !important;
+  background-image:none !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+}
+
+/* Player and Enemy use the same calm board-slot blue.
+   Only opacity differs very slightly so the active phase remains readable. */
+.phase-status-rail > .vertical-phase-badge.player-phase{
+  color:rgba(112,170,202,.76) !important;
+  -webkit-text-fill-color:rgba(112,170,202,.76) !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.42) !important;
+}
+
+.phase-status-rail > .vertical-phase-badge.enemy-phase{
+  color:rgba(104,153,181,.68) !important;
+  -webkit-text-fill-color:rgba(104,153,181,.68) !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.42) !important;
+}
+
+/* Ensure no inherited focus/hover outline appears */
+#phaseText:focus,
+#phaseText:focus-visible,
+#phaseText:hover,
+.phase-status-rail:hover,
+.phase-status-rail:focus-within{
+  outline:0 !important;
+  border:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+}
+
+
+/* =========================================================
+   PHASE CROSSFADE
+   ========================================================= */
+
+.phase-status-rail{
+  overflow:visible !important;
+}
+
+.phase-status-rail > .vertical-phase-badge,
+.phase-status-rail > .vertical-phase-ghost{
+  will-change:opacity,transform !important;
+  backface-visibility:hidden !important;
+  -webkit-font-smoothing:antialiased !important;
+}
+
+.phase-status-rail > .vertical-phase-ghost{
+  position:absolute !important;
+  inset:0 !important;
+
+  width:42px !important;
+  height:100% !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:0 !important;
+  margin:0 !important;
+
+  writing-mode:vertical-rl !important;
+  text-orientation:upright !important;
+  white-space:nowrap !important;
+
+  font-size:clamp(22px,3.1vh,34px) !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  letter-spacing:clamp(2px,.6vh,6px) !important;
+
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+  pointer-events:none !important;
+}
+
+.phase-status-rail > .vertical-phase-ghost.player-phase{
+  color:rgba(112,170,202,.76) !important;
+  -webkit-text-fill-color:rgba(112,170,202,.76) !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.42) !important;
+}
+
+.phase-status-rail > .vertical-phase-ghost.enemy-phase{
+  color:rgba(104,153,181,.68) !important;
+  -webkit-text-fill-color:rgba(104,153,181,.68) !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.42) !important;
+}
+
+@media(max-height:700px){
+  .phase-status-rail > .vertical-phase-ghost{
+    font-size:clamp(18px,2.7vh,27px) !important;
+    letter-spacing:2px !important;
+  }
+}
+
+
+/* =========================================================
+   CONSISTENT STATUS COLORS
+   ENERGY = BLUE
+   HP     = GREEN
+   ========================================================= */
+
+:root{
+  --tcg-energy-blue:#66c5ff;
+  --tcg-energy-blue-light:#c9efff;
+  --tcg-energy-blue-dark:#244e8b;
+
+  --tcg-hp-green:#72df91;
+  --tcg-hp-green-light:#c9f8d4;
+  --tcg-hp-green-dark:#22643b;
+}
+
+/* ---------- Energy on every card ---------- */
+
+.hand .card .cost,
+.card .cost{
+  color:#ffffff !important;
+  border-color:rgba(142,215,255,.88) !important;
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      #a8e4ff 0%,
+      #4ba7e8 40%,
+      var(--tcg-energy-blue-dark) 100%
+    ) !important;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.34),
+    0 0 7px rgba(70,174,255,.28),
+    inset 0 1px 3px rgba(255,255,255,.30) !important;
+}
+
+/* Playable Energy stays blue, only brighter. */
+.hand .card.playable-now .cost{
+  color:#ffffff !important;
+  border-color:#bcecff !important;
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      #d3f4ff 0%,
+      #67c9ff 39%,
+      #2872b7 100%
+    ) !important;
+  box-shadow:
+    0 0 0 1px rgba(128,207,255,.22),
+    0 0 11px rgba(74,177,255,.58),
+    inset 0 1px 3px rgba(255,255,255,.42) !important;
+}
+
+/* Non-playable Energy remains blue instead of becoming gray. */
+.hand .card.invalid .cost,
+.hand .card.not-playable-now .cost,
+.hand .card:not(.playable-now) .cost{
+  filter:brightness(.72) saturate(.75) !important;
+  opacity:.86 !important;
+}
+
+/* Card inspector Energy cost. */
+.inspect-card-cost{
+  color:#ffffff !important;
+  border-color:rgba(142,215,255,.88) !important;
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      #a8e4ff 0%,
+      #4ba7e8 40%,
+      #244e8b 100%
+    ) !important;
+  box-shadow:
+    0 0 11px rgba(74,177,255,.38) !important;
+}
+
+/* ---------- Energy status rail ---------- */
+
+.vertical-status-rail > .enemy-energy-panel,
+.vertical-status-rail > .energy-panel{
+  color:var(--tcg-energy-blue) !important;
+  border-color:rgba(89,185,255,.36) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(24,52,82,.96),
+      rgba(8,20,37,.96)
+    ) !important;
+}
+
+.vertical-status-rail > .enemy-energy-panel::before,
+.vertical-status-rail > .energy-panel::before{
+  color:var(--tcg-energy-blue) !important;
+  text-shadow:
+    0 0 8px rgba(71,181,255,.44) !important;
+}
+
+.vertical-status-rail > .enemy-energy-panel strong,
+.vertical-status-rail > .energy-panel strong,
+.vertical-status-rail > .enemy-energy-panel strong b,
+.vertical-status-rail > .energy-panel strong b,
+#enemyEnergy,
+#enemyMaxEnergy,
+#energy,
+#maxEnergy{
+  color:var(--tcg-energy-blue-light) !important;
+  -webkit-text-fill-color:
+    var(--tcg-energy-blue-light) !important;
+  text-shadow:
+    0 0 7px rgba(71,181,255,.24) !important;
+}
+
+/* ---------- HP on every creature and status ---------- */
+
+.card:not(.spell-card) .stats .hp,
+.hand .card:not(.spell-card) .stats .hp,
+.inspect-stat.health{
+  color:var(--tcg-hp-green) !important;
+  -webkit-text-fill-color:
+    var(--tcg-hp-green) !important;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.78),
+    0 0 6px rgba(75,210,115,.20) !important;
+}
+
+/* Spell duration/type is not HP, so keep it neutral blue. */
+.card.spell-card .stats .hp{
+  color:rgba(156,202,230,.76) !important;
+  -webkit-text-fill-color:
+    rgba(156,202,230,.76) !important;
+}
+
+.vertical-status-rail > .hand-health-badge{
+  color:var(--tcg-hp-green) !important;
+  border-color:rgba(87,208,121,.34) !important;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,65,45,.96),
+      rgba(8,27,19,.96)
+    ) !important;
+}
+
+.vertical-status-rail > .hand-health-badge::before{
+  color:var(--tcg-hp-green) !important;
+  text-shadow:
+    0 0 8px rgba(72,207,112,.42) !important;
+}
+
+.vertical-status-rail > .hand-health-badge strong,
+#enemyHandHp,
+#playerHandHp,
+#enemyHp,
+#playerHp{
+  color:var(--tcg-hp-green-light) !important;
+  -webkit-text-fill-color:
+    var(--tcg-hp-green-light) !important;
+  text-shadow:
+    0 0 7px rgba(72,207,112,.22) !important;
+}
+
+/* =========================================================
+   SPELL EFFECT AREA PREVIEW WHILE DRAGGING
+   ========================================================= */
+
+.board .slot.spell-effect-preview{
+  position:relative !important;
+  z-index:14 !important;
+  outline:2px solid rgba(91,190,255,.82) !important;
+  outline-offset:3px !important;
+  border-color:rgba(112,204,255,.70) !important;
+  box-shadow:
+    0 0 0 1px rgba(119,208,255,.20),
+    0 0 17px rgba(72,174,255,.34),
+    inset 0 0 17px rgba(72,174,255,.10) !important;
+  animation:
+    spellAreaPreviewPulse 1.05s ease-in-out infinite !important;
+}
+
+/* Beneficial row or column effect. */
+.board .slot.spell-effect-preview.spell-preview-friendly{
+  outline-color:rgba(98,218,157,.86) !important;
+  border-color:rgba(98,218,157,.62) !important;
+  box-shadow:
+    0 0 0 1px rgba(98,218,157,.18),
+    0 0 17px rgba(70,207,139,.30),
+    inset 0 0 17px rgba(70,207,139,.09) !important;
+}
+
+/* Damage or debuff effect. */
+.board .slot.spell-effect-preview.spell-preview-enemy{
+  outline-color:rgba(234,123,126,.84) !important;
+  border-color:rgba(234,123,126,.58) !important;
+  box-shadow:
+    0 0 0 1px rgba(234,123,126,.16),
+    0 0 17px rgba(220,90,101,.28),
+    inset 0 0 17px rgba(220,90,101,.08) !important;
+}
+
+/* Shared effect affecting both players. */
+.board .slot.spell-effect-preview.spell-preview-both{
+  outline-color:rgba(105,190,231,.84) !important;
+  border-color:rgba(105,190,231,.62) !important;
+}
+
+/* Keep an occupied card readable inside the highlighted slot. */
+.board .slot.spell-effect-preview > .card{
+  filter:
+    brightness(1.06)
+    drop-shadow(0 0 7px rgba(101,193,238,.20)) !important;
+}
+
+/* The currently touched spell slot remains visibly selected. */
+.board .slot.spell-preview-anchor{
+  outline:2px dashed rgba(207,238,255,.92) !important;
+  outline-offset:4px !important;
+  box-shadow:
+    0 0 16px rgba(105,194,255,.42),
+    inset 0 0 14px rgba(105,194,255,.12) !important;
+}
+
+@keyframes spellAreaPreviewPulse{
+  0%,100%{
+    outline-offset:3px;
+    filter:brightness(1);
+  }
+
+  50%{
+    outline-offset:5px;
+    filter:brightness(1.07);
+  }
+}
+
+/* Avoid animation for users who disable motion. */
+@media(prefers-reduced-motion:reduce){
+  .board .slot.spell-effect-preview{
+    animation:none !important;
+  }
+}
+
+
+/* =========================================================
+   PLAYABLE CARD — BLUE EDGE HIGHLIGHT
+   Appears only when the card is currently playable.
+   ========================================================= */
+
+.hand .card.playable-now{
+  border-color:rgba(94,190,255,.82) !important;
+  box-shadow:
+    0 0 0 1px rgba(105,199,255,.36),
+    0 0 10px rgba(65,170,255,.22),
+    0 8px 18px rgba(0,0,0,.28) !important;
+
+  outline:1px solid rgba(117,207,255,.34) !important;
+  outline-offset:-2px !important;
+
+  transition:
+    transform .2s cubic-bezier(.2,.78,.2,1),
+    filter .2s ease,
+    border-color .2s ease,
+    outline-color .2s ease,
+    box-shadow .2s ease !important;
+}
+
+/* Slightly stronger when hovered or selected. */
+.hand .card.playable-now:hover,
+.hand .card.playable-now.hand-selected,
+.hand .card.playable-now:focus-visible{
+  border-color:rgba(155,225,255,.98) !important;
+  outline-color:rgba(145,220,255,.70) !important;
+
+  box-shadow:
+    0 0 0 2px rgba(109,204,255,.45),
+    0 0 20px rgba(65,177,255,.38),
+    0 28px 48px rgba(0,0,0,.64) !important;
+}
+
+/* Cards that cannot currently be played must not retain the blue edge. */
+.hand .card.invalid,
+.hand .card.not-playable-now,
+.hand .card:not(.playable-now){
+  outline-color:transparent !important;
+}
+
+/* Keep spell and creature cards using the same playable color language. */
+.hand .card.playable-now.spell-card,
+.hand .card.playable-now:not(.spell-card){
+  border-color:rgba(94,190,255,.82) !important;
+}
+
+/* Subtle breathing effect, disabled while hovered to keep the card crisp. */
+@keyframes playableCardBlueEdgePulse{
+  0%,100%{
+    box-shadow:
+      0 0 0 1px rgba(105,199,255,.28),
+      0 0 8px rgba(65,170,255,.16),
+      0 8px 18px rgba(0,0,0,.28);
+  }
+
+  50%{
+    box-shadow:
+      0 0 0 1px rgba(125,211,255,.42),
+      0 0 13px rgba(65,170,255,.28),
+      0 8px 18px rgba(0,0,0,.28);
+  }
+}
+
+.hand .card.playable-now:not(:hover):not(.hand-selected){
+  animation:
+    playableCardBlueEdgePulse 1.8s ease-in-out infinite !important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hand .card.playable-now{
+    animation:none !important;
+  }
+}
+
+
+/* =========================================================
+   DISCARD PILE VIEWER
+   ========================================================= */
+
+.discard-pile{
+  cursor:pointer !important;
+}
+
+.discard-pile.has-discard > .pile-card{
+  background:none !important;
+  border-color:rgba(255,255,255,.28) !important;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.42),
+    0 0 0 1px rgba(255,255,255,.1) inset !important;
+}
+
+.discard-pile.has-discard > .pile-card::before,
+.discard-pile.has-discard > .pile-card::after{
+  content:"" !important;
+  display:block !important;
+  position:absolute !important;
+  inset:0 !important;
+  border-radius:11px !important;
+  background:rgba(12,18,31,.92) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  transform:translate(5px,-5px) !important;
+  z-index:-2 !important;
+}
+
+.discard-pile.has-discard > .pile-card::after{
+  transform:translate(9px,-9px) !important;
+  opacity:.62 !important;
+  z-index:-3 !important;
+}
+
+.discard-mini-card{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  border-radius:11px;
+  border:1px solid rgba(255,255,255,.2);
+  background:linear-gradient(160deg,#273a65,#101827);
+  box-shadow:0 8px 18px rgba(0,0,0,.42);
+}
+
+.discard-mini-card.enemy{
+  background:linear-gradient(160deg,#642b36,#211017);
+}
+
+.discard-mini-card.spell-card{
+  background:linear-gradient(160deg,#5b2742,#21101d);
+}
+
+.discard-mini-art{
+  position:absolute;
+  inset:0;
+  opacity:.8;
+}
+
+.discard-mini-art img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.discard-mini-art::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.78));
+}
+
+.discard-mini-name,
+.discard-mini-type{
+  position:absolute;
+  z-index:2;
+  text-shadow:0 2px 4px rgba(0,0,0,.86);
+}
+
+.discard-mini-name{
+  left:6px;
+  right:6px;
+  bottom:17px;
+  color:#fff;
+  font-size:8px;
+  line-height:1;
+  font-weight:950;
+}
+
+.discard-mini-type{
+  left:6px;
+  right:6px;
+  bottom:6px;
+  color:#b6c5d8;
+  font-size:7px;
+  line-height:1;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.discard-viewer{
+  position:fixed;
+  inset:0;
+  z-index:14000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  background:
+    radial-gradient(circle at 50% 42%,rgba(58,75,111,.26),transparent 38%),
+    rgba(3,7,15,.78);
+  backdrop-filter:blur(10px);
+}
+
+.discard-viewer.open{
+  display:flex;
+}
+
+.discard-viewer-dialog{
+  position:relative;
+  width:100vw;
+  height:100vh;
+  max-width:1180px;
+  overflow:hidden;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  padding:54px 76px 50px;
+}
+
+.discard-viewer-header{
+  position:absolute;
+  left:72px;
+  right:72px;
+  top:28px;
+  z-index:4;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  padding-right:48px;
+  margin-bottom:0;
+  pointer-events:none;
+}
+
+.discard-viewer-eyebrow{
+  display:block;
+  color:#8fb3d8;
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.discard-viewer-header h2{
+  margin:3px 0 0;
+  color:#fff;
+  font-size:24px;
+  line-height:1;
+}
+
+.discard-viewer-header strong{
+  color:#ffe18b;
+  font-size:13px;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+.discard-viewer-empty{
+  display:grid;
+  min-height:100%;
+  place-items:center;
+  color:#9fafc5;
+  font-weight:850;
+}
+
+.discard-viewer-empty[hidden]{
+  display:none !important;
+}
+
+.discard-viewer-scroll{
+  position:absolute;
+  left:0;
+  right:0;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  justify-content:flex-start;
+  gap:24px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:58px 76px 62px;
+  scroll-snap-type:x proximity;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  mask-image:linear-gradient(90deg,#000 0,#000 92%,transparent 100%);
+  cursor:grab;
+  user-select:none;
+  touch-action:pan-y;
+}
+
+.discard-viewer-scroll.is-short-list{
+  justify-content:center;
+  overflow-x:hidden;
+  mask-image:none;
+}
+
+.discard-viewer-scroll.is-overflow-list{
+  justify-content:flex-start;
+}
+
+.discard-viewer-scroll.is-at-start{
+  mask-image:linear-gradient(90deg,#000 0,#000 92%,transparent 100%);
+}
+
+.discard-viewer-scroll.is-away-from-start{
+  mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);
+}
+
+.discard-viewer-scroll.is-at-end{
+  mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 100%);
+}
+
+.discard-viewer-scroll.is-short-list.is-at-start,
+.discard-viewer-scroll.is-short-list.is-away-from-start,
+.discard-viewer-scroll.is-short-list.is-at-end{
+  mask-image:none;
+}
+
+.discard-viewer-scroll::-webkit-scrollbar{
+  display:none;
+}
+
+.discard-viewer-scroll.is-dragging,
+.discard-viewer-scroll.is-momentum{
+  cursor:grabbing;
+  scroll-snap-type:none;
+  scroll-behavior:auto;
+}
+
+.discard-viewer-scroll.settle-left{
+  animation:discardSettleLeft .34s cubic-bezier(.2,.8,.2,1);
+}
+
+.discard-viewer-scroll.settle-right{
+  animation:discardSettleRight .34s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes discardSettleLeft{
+  0%{transform:translateY(-50%) translateX(0)}
+  34%{transform:translateY(-50%) translateX(18px)}
+  68%{transform:translateY(-50%) translateX(-7px)}
+  100%{transform:translateY(-50%) translateX(0)}
+}
+
+@keyframes discardSettleRight{
+  0%{transform:translateY(-50%) translateX(0)}
+  34%{transform:translateY(-50%) translateX(-18px)}
+  68%{transform:translateY(-50%) translateX(7px)}
+  100%{transform:translateY(-50%) translateX(0)}
+}
+
+.discard-view-card{
+  position:relative;
+  flex:0 0 218px;
+  width:218px;
+  height:300px;
+  overflow:hidden;
+  scroll-snap-align:start;
+  border:2px solid rgba(255,255,255,.2);
+  border-radius:15px;
+  background:linear-gradient(160deg,#273a65,#101827);
+  box-shadow:0 24px 52px rgba(0,0,0,.58);
+  transform:translateY(0) rotate(-1.2deg);
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
+}
+
+.discard-view-card:nth-child(2n){
+  transform:translateY(14px) rotate(1deg);
+}
+
+.discard-view-card:nth-child(3n){
+  transform:translateY(-8px) rotate(.4deg);
+}
+
+.discard-view-card:hover{
+  z-index:3;
+  transform:translateY(-14px) rotate(0deg) scale(1.045);
+  border-color:rgba(255,255,255,.36);
+  box-shadow:0 34px 72px rgba(0,0,0,.72);
+}
+
+.discard-view-card.enemy{
+  background:linear-gradient(160deg,#642b36,#211017);
+}
+
+.discard-view-card.spell-card{
+  background:linear-gradient(160deg,#5b2742,#21101d);
+}
+
+.discard-view-art{
+  position:absolute;
+  inset:0;
+  opacity:.82;
+}
+
+.discard-view-art img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.discard-view-art::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.38) 48%,rgba(0,0,0,.9));
+}
+
+.discard-view-cost,
+.discard-newest-badge,
+.discard-view-body,
+.discard-view-stats{
+  position:absolute;
+  z-index:2;
+}
+
+.discard-view-cost{
+  left:10px;
+  top:10px;
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:rgba(202,213,226,.88);
+  color:#111827;
+  border:1px solid rgba(255,255,255,.38);
+  font-weight:950;
+}
+
+.discard-newest-badge{
+  right:10px;
+  top:10px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(255,214,82,.95);
+  color:#201403;
+  font-size:10px;
+  font-weight:950;
+  text-transform:uppercase;
+}
+
+.discard-view-body{
+  left:12px;
+  right:12px;
+  bottom:42px;
+}
+
+.discard-view-name{
+  color:#fff;
+  font-size:15px;
+  line-height:1.05;
+  font-weight:950;
+  text-shadow:0 2px 4px rgba(0,0,0,.82);
+}
+
+.discard-view-type{
+  margin-top:3px;
+  color:#b9c7dc;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+
+.discard-view-body p{
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+  margin:8px 0 0;
+  color:#d5dfef;
+  font-size:10px;
+  line-height:1.25;
+}
+
+.discard-view-stats{
+  left:12px;
+  right:12px;
+  bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+  color:#fff;
+  font-size:10px;
+  font-weight:950;
+}
+
+@media(max-width:720px){
+  .discard-viewer{
+    padding:0;
+  }
+
+  .discard-viewer-dialog{
+    padding:58px 48px 42px;
+    max-width:none;
+  }
+
+  .discard-viewer-header{
+    left:18px;
+    right:56px;
+    top:18px;
+  }
+
+  .discard-view-card{
+    flex-basis:154px;
+    width:154px;
+    height:216px;
+  }
+
+  .discard-viewer-scroll{
+    padding-left:48px;
+    padding-right:48px;
+  }
+}
+
+
+/* =========================================================
+   SHARED SPELL — LANDSCAPE SLOT
+   ========================================================= */
+
+/* Shared spell slots are landscape and remain centered per lane. */
+.board .slot.shared-slot{
+  width:104px !important;
+  min-width:104px !important;
+  max-width:104px !important;
+
+  height:64px !important;
+  min-height:64px !important;
+  max-height:64px !important;
+
+  aspect-ratio:13 / 8 !important;
+  margin:0 !important;
+
+  justify-self:center !important;
+  align-self:center !important;
+
+  border-radius:14px !important;
+}
+
+/* Landscape shared spell card. */
+.board .slot.shared-slot > .card{
+  width:96px !important;
+  min-width:96px !important;
+  max-width:96px !important;
+
+  height:56px !important;
+  min-height:56px !important;
+  max-height:56px !important;
+
+  aspect-ratio:12 / 7 !important;
+  border-radius:11px !important;
+  padding:5px !important;
+}
+
+/* Artwork fills the horizontal card. */
+.board .slot.shared-slot > .card .art{
+  border-radius:9px !important;
+}
+
+/* Compact landscape information layout. */
+.board .slot.shared-slot > .card .card-info{
+  position:absolute !important;
+  left:7px !important;
+  right:7px !important;
+  bottom:6px !important;
+  margin:0 !important;
+}
+
+.board .slot.shared-slot > .card .name{
+  max-width:68px !important;
+  font-size:9px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+.board .slot.shared-slot > .card .type{
+  display:none !important;
+}
+
+.board .slot.shared-slot > .card .stats{
+  position:absolute !important;
+  right:6px !important;
+  top:5px !important;
+  left:auto !important;
+  bottom:auto !important;
+
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  white-space:nowrap !important;
+  align-items:center !important;
+  gap:2px !important;
+
+  font-size:8px !important;
+}
+
+/* Keep empty shared-slot symbol proportional. */
+.board .slot.shared-slot::before{
+  width:20px !important;
+  height:20px !important;
+  border-width:2px !important;
+}
+
+/* =========================================================
+   REMOVE BOTH MIDDLE DIVIDER LINES
+   ========================================================= */
+
+.arena-divider,
+.enemy-divider,
+.player-divider{
+  display:none !important;
+  height:0 !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+}
+
+/* Keep the shared row visually close to both creature sections. */
+.board-grid{
+  row-gap:8px !important;
+}
+
+/* =========================================================
+   HP / ENERGY STATUS — NO CONTAINER, BIGGER, MORE OPEN GAP
+   ========================================================= */
+
+.vertical-status-rail{
+  width:118px !important;
+  min-width:118px !important;
+
+  gap:16px !important;
+
+  align-items:center !important;
+  justify-content:center !important;
+
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+}
+
+/* Remove every capsule/container visual. */
+.vertical-status-rail > .hand-health-badge,
+.vertical-status-rail > .enemy-energy-panel,
+.vertical-status-rail > .energy-panel{
+  position:relative !important;
+
+  width:112px !important;
+  min-width:112px !important;
+  max-width:112px !important;
+
+  height:50px !important;
+  min-height:50px !important;
+  max-height:50px !important;
+
+  margin:0 !important;
+  padding:0 4px 0 38px !important;
+
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  background:transparent !important;
+  background-image:none !important;
+  border:0 !important;
+  outline:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* Bigger HP/Energy icons. */
+.vertical-status-rail > .hand-health-badge::before,
+.vertical-status-rail > .enemy-energy-panel::before,
+.vertical-status-rail > .energy-panel::before{
+  left:10px !important;
+  width:24px !important;
+
+  font-size:23px !important;
+  line-height:1 !important;
+
+  filter:none !important;
+}
+
+/* Bigger numeric values. */
+.vertical-status-rail > .hand-health-badge strong,
+.vertical-status-rail > .enemy-energy-panel strong,
+.vertical-status-rail > .energy-panel strong{
+  width:100% !important;
+
+  font-size:25px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  text-align:center !important;
+}
+
+/* More space around End Turn than between regular status items. */
+.vertical-status-rail > .end-turn-wrap{
+  width:118px !important;
+  min-width:118px !important;
+
+  margin:8px 0 !important;
+  padding:0 !important;
+
+  gap:0 !important;
+
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+}
+
+/* Preserve exact order in the open vertical rail. */
+.vertical-status-rail > .enemy-hp-status{
+  order:1 !important;
+}
+
+.vertical-status-rail > .enemy-energy-status{
+  order:2 !important;
+}
+
+.vertical-status-rail > .end-turn-wrap{
+  order:3 !important;
+}
+
+.vertical-status-rail > .player-energy-status{
+  order:4 !important;
+}
+
+.vertical-status-rail > .player-hp-status{
+  order:5 !important;
+}
+
+/* Short screens: keep the layout open but slightly tighter. */
+@media(max-height:720px){
+  .vertical-status-rail{
+    gap:10px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    margin:4px 0 !important;
+  }
+}
+
+
+/* =========================================================
+   SHARED SPELL — BACK TO PORTRAIT
+   Keep all other latest status/divider updates.
+   ========================================================= */
+
+.board .slot.shared-slot{
+  width:69px !important;
+  min-width:69px !important;
+  max-width:69px !important;
+
+  height:86px !important;
+  min-height:86px !important;
+  max-height:86px !important;
+
+  aspect-ratio:3 / 4 !important;
+  margin:0 !important;
+
+  justify-self:center !important;
+  align-self:center !important;
+
+  border-radius:13px !important;
+}
+
+.board .slot.shared-slot > .card{
+  width:61px !important;
+  min-width:61px !important;
+  max-width:61px !important;
+
+  height:77px !important;
+  min-height:77px !important;
+  max-height:77px !important;
+
+  aspect-ratio:3 / 4 !important;
+  border-radius:10px !important;
+  padding:4px !important;
+}
+
+/* Restore normal portrait card layout */
+.board .slot.shared-slot > .card .art{
+  position:relative !important;
+  inset:auto !important;
+  width:100% !important;
+  height:auto !important;
+  border-radius:8px !important;
+}
+
+.board .slot.shared-slot > .card .card-info{
+  position:relative !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  margin:0 !important;
+}
+
+.board .slot.shared-slot > .card .name{
+  max-width:none !important;
+  font-size:9px !important;
+  line-height:1.05 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+
+.board .slot.shared-slot > .card .type{
+  display:block !important;
+}
+
+.board .slot.shared-slot > .card .stats{
+  position:relative !important;
+  inset:auto !important;
+
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:2px !important;
+
+  font-size:8px !important;
+}
+
+.board .slot.shared-slot::before{
+  width:18px !important;
+  height:18px !important;
+  border-width:2px !important;
+}
+
+
+/* =========================================================
+   BOARD — VERTICAL CENTER + RESPONSIVE SCALE
+   The board is centered inside the free space between
+   the Enemy hand and Player hand.
+   ========================================================= */
+
+html,
+body{
+  width:100% !important;
+  height:100% !important;
+  min-height:100% !important;
+  overflow:hidden !important;
+}
+
+.game-shell{
+  position:relative !important;
+  width:100vw !important;
+  height:100dvh !important;
+  min-height:100dvh !important;
+
+  padding:0 !important;
+  margin:0 !important;
+
+  display:block !important;
+  overflow:visible !important;
+}
+
+/*
+  The battlefield fills only the usable vertical space.
+  It no longer sits at the top of the normal document flow.
+*/
+.battlefield{
+  position:fixed !important;
+
+  left:0 !important;
+  right:0 !important;
+  top:calc(var(--edge-hand-visible) + 4px) !important;
+  bottom:calc(var(--edge-hand-visible) + 4px) !important;
+
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  display:grid !important;
+  place-items:center !important;
+
+  overflow:visible !important;
+  pointer-events:none !important;
+}
+
+/* The board is the only interactive child inside battlefield. */
+.board{
+  --board-responsive-scale:1.12;
+
+  position:relative !important;
+  inset:auto !important;
+
+  width:700px !important;
+  max-width:700px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  transform:
+    translate3d(0,0,0)
+    scale(var(--board-responsive-scale)) !important;
+
+  transform-origin:center center !important;
+
+  overflow:visible !important;
+  pointer-events:auto !important;
+
+  transition:transform .22s ease !important;
+}
+
+/* Keep the actual grid centered within the board element. */
+.board-grid{
+  margin-inline:auto !important;
+  align-content:center !important;
+  justify-content:center !important;
+}
+
+/*
+  The hand containers remain fixed at the viewport edges.
+  No normal-flow margin is reserved below or above the board.
+*/
+.enemy-hand-panel,
+.hand-panel{
+  margin:0 !important;
+}
+
+/* -------- Vertical responsiveness -------- */
+
+@media(max-height:980px){
+  .board{
+    --board-responsive-scale:1.04;
+  }
+}
+
+@media(max-height:880px){
+  .board{
+    --board-responsive-scale:.94;
+  }
+}
+
+@media(max-height:790px){
+  .board{
+    --board-responsive-scale:.84;
+  }
+}
+
+@media(max-height:710px){
+  .board{
+    --board-responsive-scale:.74;
+  }
+}
+
+@media(max-height:630px){
+  .board{
+    --board-responsive-scale:.66;
+  }
+}
+
+/* -------- Horizontal safety -------- */
+
+/* Status rails move inside the board at this breakpoint,
+   so the scale is capped to keep everything inside the viewport. */
+@media(max-width:1100px){
+  .board{
+    --board-responsive-scale:.94;
+  }
+}
+
+@media(max-width:980px){
+  body{
+    overflow:hidden !important;
+  }
+
+  .battlefield{
+    top:calc(var(--edge-hand-visible) + 2px) !important;
+    bottom:calc(var(--edge-hand-visible) + 2px) !important;
+  }
+
+  .board{
+    --board-responsive-scale:.84;
+
+    width:700px !important;
+    max-width:700px !important;
+
+    /* Cancel old mobile overflow behavior. */
+    overflow:visible !important;
+  }
+
+  .board-grid{
+    min-width:0 !important;
+  }
+}
+
+@media(max-width:820px){
+  .board{
+    --board-responsive-scale:.74;
+  }
+}
+
+@media(max-width:720px){
+  .board{
+    --board-responsive-scale:.65;
+  }
+}
+
+/* Combined small-height safety overrides.
+   These appear last so height remains the priority. */
+@media(max-width:980px) and (max-height:790px){
+  .board{
+    --board-responsive-scale:.72;
+  }
+}
+
+@media(max-width:980px) and (max-height:690px){
+  .board{
+    --board-responsive-scale:.62;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .board{
+    transition:none !important;
+  }
+}
+
+
+/* =========================================================
+   BOARD HORIZONTAL CENTER FIX
+   Prevent left shift and viewport cropping.
+   ========================================================= */
+
+.battlefield{
+  position:fixed !important;
+  left:0 !important;
+  right:0 !important;
+  top:calc(var(--edge-hand-visible) + 4px) !important;
+  bottom:calc(var(--edge-hand-visible) + 4px) !important;
+
+  width:100vw !important;
+  height:auto !important;
+
+  display:block !important;
+  padding:0 !important;
+  margin:0 !important;
+
+  overflow:visible !important;
+}
+
+/* Use the actual center point, not grid alignment or document flow. */
+.board{
+  position:absolute !important;
+
+  left:50% !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+
+  width:700px !important;
+  min-width:700px !important;
+  max-width:none !important;
+
+  box-sizing:border-box !important;
+
+  padding-left:0 !important;
+  padding-right:0 !important;
+  padding-inline:0 !important;
+
+  margin:0 !important;
+
+  transform:
+    translate(-50%,-50%)
+    scale(var(--board-responsive-scale)) !important;
+
+  transform-origin:center center !important;
+}
+
+/* Center the grid itself inside the fixed board width. */
+.board-grid{
+  position:relative !important;
+
+  width:max-content !important;
+  min-width:0 !important;
+  max-width:none !important;
+
+  margin-left:auto !important;
+  margin-right:auto !important;
+  margin-inline:auto !important;
+
+  justify-content:center !important;
+}
+
+/* Keep both side rails attached outside the centered board.
+   Remove old mobile rules that pushed them into the board unevenly. */
+.phase-status-rail{
+  left:auto !important;
+  right:calc(100% + 8px) !important;
+  transform:none !important;
+}
+
+.vertical-status-rail{
+  left:calc(100% + 18px) !important;
+  right:auto !important;
+  transform:translateY(-50%) !important;
+}
+
+/* Horizontal scale safety including both side rails. */
+@media(max-width:1100px){
+  .board{
+    --board-responsive-scale:.90;
+  }
+}
+
+@media(max-width:980px){
+  .board{
+    --board-responsive-scale:.82;
+
+    padding-left:0 !important;
+    padding-right:0 !important;
+    padding-inline:0 !important;
+  }
+
+  .phase-status-rail{
+    left:auto !important;
+    right:calc(100% + 6px) !important;
+    transform:none !important;
+  }
+
+  .vertical-status-rail{
+    left:calc(100% + 10px) !important;
+    right:auto !important;
+    transform:translateY(-50%) !important;
+  }
+}
+
+@media(max-width:860px){
+  .board{
+    --board-responsive-scale:.73;
+  }
+}
+
+@media(max-width:760px){
+  .board{
+    --board-responsive-scale:.64;
+  }
+}
+
+/* Height remains the main vertical scaling factor. */
+@media(max-height:790px){
+  .board{
+    --board-responsive-scale:.80;
+  }
+}
+
+@media(max-height:700px){
+  .board{
+    --board-responsive-scale:.70;
+  }
+}
+
+@media(max-height:620px){
+  .board{
+    --board-responsive-scale:.61;
+  }
+}
+
+/* Combined width + height safety. */
+@media(max-width:980px) and (max-height:790px){
+  .board{
+    --board-responsive-scale:.68;
+  }
+}
+
+@media(max-width:980px) and (max-height:690px){
+  .board{
+    --board-responsive-scale:.59;
+  }
+}
+
+
+/* =========================================================
+   DECK / DISCARD LABELS — BESIDE THE CARD
+   Count and label no longer overlay the pile artwork.
+   ========================================================= */
+
+.pile{
+  position:relative !important;
+
+  display:grid !important;
+  grid-template-columns:auto 52px !important;
+  grid-template-rows:1fr 1fr !important;
+  align-items:center !important;
+  justify-content:center !important;
+  column-gap:9px !important;
+  row-gap:0 !important;
+
+  width:auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+
+  overflow:visible !important;
+}
+
+/* The pile artwork occupies both rows. */
+.pile > .pile-card{
+  grid-column:1 !important;
+  grid-row:1 / span 2 !important;
+
+  position:relative !important;
+  inset:auto !important;
+
+  margin:0 !important;
+}
+
+/* Card count */
+.pile > strong{
+  grid-column:2 !important;
+  grid-row:1 !important;
+
+  position:relative !important;
+  inset:auto !important;
+  transform:none !important;
+
+  align-self:end !important;
+
+  margin:0 0 1px 0 !important;
+  padding:0 !important;
+
+  width:auto !important;
+  min-width:0 !important;
+
+  color:rgba(222,238,249,.90) !important;
+  font-size:19px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  text-align:left !important;
+
+  background:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.72) !important;
+}
+
+/* Deck / Discard text */
+.pile > span{
+  grid-column:2 !important;
+  grid-row:2 !important;
+
+  position:relative !important;
+  inset:auto !important;
+  transform:none !important;
+
+  align-self:start !important;
+
+  margin:2px 0 0 0 !important;
+  padding:0 !important;
+
+  width:auto !important;
+  min-width:0 !important;
+
+  color:rgba(151,180,201,.72) !important;
+  font-size:10px !important;
+  line-height:1 !important;
+  font-weight:800 !important;
+  letter-spacing:.7px !important;
+  text-transform:uppercase !important;
+  text-align:left !important;
+
+  background:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.64) !important;
+}
+
+/* Player piles are on the left side of the board:
+   artwork first, information to its right. */
+#playerDeckPile,
+#playerDiscardPile{
+  grid-template-columns:auto 52px !important;
+}
+
+#playerDeckPile > .pile-card,
+#playerDiscardPile > .pile-card{
+  grid-column:1 !important;
+}
+
+#playerDeckPile > strong,
+#playerDeckPile > span,
+#playerDiscardPile > strong,
+#playerDiscardPile > span{
+  grid-column:2 !important;
+  text-align:left !important;
+}
+
+/* Enemy piles are on the right side of the board:
+   information first, artwork second, so labels point inward. */
+#enemyDeckPile,
+#enemyDiscardPile{
+  grid-template-columns:52px auto !important;
+}
+
+#enemyDeckPile > .pile-card,
+#enemyDiscardPile > .pile-card{
+  grid-column:2 !important;
+}
+
+#enemyDeckPile > strong,
+#enemyDeckPile > span,
+#enemyDiscardPile > strong,
+#enemyDiscardPile > span{
+  grid-column:1 !important;
+  text-align:right !important;
+}
+
+/* Ensure old overlay pseudo-elements cannot cover the labels. */
+.pile > strong::before,
+.pile > strong::after,
+.pile > span::before,
+.pile > span::after{
+  content:none !important;
+  display:none !important;
+}
+
+/* Slightly tighter version for short screens. */
+@media(max-height:700px){
+  .pile{
+    column-gap:6px !important;
+  }
+
+  .pile > strong{
+    font-size:17px !important;
+  }
+
+  .pile > span{
+    font-size:9px !important;
+  }
+}
+
+
+/* =========================================================
+   PILE POSITION FIX
+   Keep the card stack in its original grid position.
+   Move only count + Deck/Discard text outside the pile.
+   ========================================================= */
+
+/* Restore original pile box and stack alignment. */
+.pile,
+#playerDeckPile,
+#playerDiscardPile,
+#enemyDeckPile,
+#enemyDiscardPile{
+  position:relative !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  grid-template-columns:none !important;
+  grid-template-rows:none !important;
+  column-gap:0 !important;
+  row-gap:0 !important;
+
+  width:86px !important;
+  min-width:86px !important;
+  max-width:86px !important;
+
+  min-height:108px !important;
+  height:auto !important;
+  aspect-ratio:3 / 4 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow:visible !important;
+}
+
+/* Restore stack card to the exact center of its original pile slot. */
+.pile > .pile-card,
+#playerDeckPile > .pile-card,
+#playerDiscardPile > .pile-card,
+#enemyDeckPile > .pile-card,
+#enemyDiscardPile > .pile-card{
+  position:absolute !important;
+  left:50% !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+
+  grid-column:auto !important;
+  grid-row:auto !important;
+
+  width:68px !important;
+  height:92px !important;
+
+  margin:0 !important;
+  transform:translate(-50%,-50%) !important;
+}
+
+/* Base style for count and label outside the card stack. */
+.pile > strong,
+.pile > span{
+  position:absolute !important;
+  z-index:5 !important;
+
+  left:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+
+  width:max-content !important;
+  min-width:0 !important;
+  max-width:72px !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+
+  pointer-events:none !important;
+}
+
+/* Count sits above the Deck/Discard label. */
+.pile > strong{
+  top:calc(50% - 20px) !important;
+
+  font-size:20px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+}
+
+.pile > span{
+  top:calc(50% + 7px) !important;
+
+  font-size:10px !important;
+  line-height:1 !important;
+  font-weight:800 !important;
+  letter-spacing:.7px !important;
+  text-transform:uppercase !important;
+}
+
+/* PLAYER:
+   count and text are placed to the LEFT of the pile. */
+#playerDeckPile > strong,
+#playerDeckPile > span,
+#playerDiscardPile > strong,
+#playerDiscardPile > span{
+  left:auto !important;
+  right:calc(100% + 10px) !important;
+  text-align:right !important;
+}
+
+/* ENEMY:
+   count and text are placed to the RIGHT of the pile. */
+#enemyDeckPile > strong,
+#enemyDeckPile > span,
+#enemyDiscardPile > strong,
+#enemyDiscardPile > span{
+  left:calc(100% + 10px) !important;
+  right:auto !important;
+  text-align:left !important;
+}
+
+/* Keep labels compact on short screens without moving the pile. */
+@media(max-height:700px){
+  .pile > strong{
+    top:calc(50% - 18px) !important;
+    font-size:18px !important;
+  }
+
+  .pile > span{
+    top:calc(50% + 6px) !important;
+    font-size:9px !important;
+  }
+
+  #playerDeckPile > strong,
+  #playerDeckPile > span,
+  #playerDiscardPile > strong,
+  #playerDiscardPile > span{
+    right:calc(100% + 7px) !important;
+  }
+
+  #enemyDeckPile > strong,
+  #enemyDeckPile > span,
+  #enemyDiscardPile > strong,
+  #enemyDiscardPile > span{
+    left:calc(100% + 7px) !important;
+  }
+}
+
+
+/* =========================================================
+   CREATURE STATS REPOSITION
+   HAND  : right side, vertical — ATK / COUNTER / HP
+   BOARD : top side, horizontal — ATK / COUNTER / HP
+   ========================================================= */
+
+/* Shared visual ordering for every creature stat group. */
+.card:not(.spell-card) .stats .atk{
+  order:1 !important;
+}
+
+.card:not(.spell-card) .stats .counter{
+  order:2 !important;
+}
+
+.card:not(.spell-card) .stats .hp{
+  order:3 !important;
+}
+
+/* ---------------------------------------------------------
+   HAND — right side, top to bottom
+   --------------------------------------------------------- */
+
+.hand .card:not(.spell-card) .stats{
+  position:absolute !important;
+
+  left:auto !important;
+  right:-8px !important;
+  top:42px !important;
+  bottom:auto !important;
+
+  z-index:120 !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:5px !important;
+
+  width:auto !important;
+  min-width:30px !important;
+
+  margin:0 !important;
+  padding:4px 3px !important;
+
+  transform:none !important;
+}
+
+/* Each stat becomes a compact vertical badge. */
+.hand .card:not(.spell-card) .stats > span{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  min-width:29px !important;
+  min-height:23px !important;
+
+  padding:2px 4px !important;
+  margin:0 !important;
+
+  border-radius:8px !important;
+  background:rgba(6,14,25,.82) !important;
+  border:1px solid rgba(185,218,238,.15) !important;
+  box-shadow:
+    0 3px 8px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+
+  font-size:12px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+/* Keep the right-side stats readable during hover enlargement. */
+.hand .card:not(.spell-card):hover .stats,
+.hand .card:not(.spell-card).hand-selected .stats,
+.hand .card:not(.spell-card):focus-visible .stats{
+  right:-9px !important;
+}
+
+/* ---------------------------------------------------------
+   BOARD — top of card, left to right
+   --------------------------------------------------------- */
+
+.board .slot .card:not(.spell-card){
+  position:relative !important;
+  overflow:visible !important;
+}
+
+.board .slot .card:not(.spell-card) .stats{
+  position:absolute !important;
+
+  left:26px !important;
+  right:4px !important;
+  top:-7px !important;
+  bottom:auto !important;
+
+  z-index:125 !important;
+
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:3px !important;
+
+  width:auto !important;
+  height:auto !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  transform:none !important;
+}
+
+/* Compact badges across the top edge. */
+.board .slot .card:not(.spell-card) .stats > span{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  min-width:22px !important;
+  min-height:18px !important;
+
+  padding:2px 3px !important;
+  margin:0 !important;
+
+  border-radius:7px !important;
+  background:rgba(6,14,25,.90) !important;
+  border:1px solid rgba(185,218,238,.17) !important;
+  box-shadow:
+    0 3px 7px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+
+  font-size:9px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+/* Keep spell stats untouched. */
+.hand .card.spell-card .stats,
+.board .slot .card.spell-card .stats{
+  order:initial !important;
+}
+
+/* Smaller board spell cards must not inherit creature positioning. */
+.board .slot.shared-slot > .card.spell-card .stats,
+.board .slot.spell-slot > .card.spell-card .stats,
+.board .slot.player-spell-slot > .card.spell-card .stats{
+  position:relative !important;
+  inset:auto !important;
+  transform:none !important;
+}
+
+.board .slot .card.spell-card .stats{
+  gap:2px !important;
+}
+
+.board .slot .card.spell-card .stats .spell-badge{
+  min-width:17px !important;
+  height:17px !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:0 3px !important;
+  border-radius:999px !important;
+  font-size:10px !important;
+  line-height:1 !important;
+}
+
+.board .slot .card.spell-card .stats .spell-badge b{
+  display:block !important;
+  font-style:normal !important;
+  line-height:1 !important;
+}
+
+.board .slot .card.spell-card .stats .spell-badge em{
+  display:none !important;
+}
+
+/* Short screens: slightly tighter badges. */
+@media(max-height:700px){
+  .hand .card:not(.spell-card) .stats{
+    top:38px !important;
+    gap:3px !important;
+  }
+
+  .hand .card:not(.spell-card) .stats > span{
+    min-height:21px !important;
+    font-size:11px !important;
+  }
+
+  .board .slot .card:not(.spell-card) .stats{
+    top:-6px !important;
+    gap:2px !important;
+  }
+}
+
+
+/* =========================================================
+   HAND CREATURE STATS — TOP RIGHT
+   ATK / COUNTER / HP stack starts from the upper-right corner.
+   ========================================================= */
+
+.hand .card:not(.spell-card) .stats{
+  left:auto !important;
+  right:-8px !important;
+  top:8px !important;
+  bottom:auto !important;
+
+  align-items:center !important;
+  justify-content:flex-start !important;
+
+  transform:none !important;
+}
+
+/* Keep the same top-right anchor while the card is hovered/selected. */
+.hand .card:not(.spell-card):hover .stats,
+.hand .card:not(.spell-card).hand-selected .stats,
+.hand .card:not(.spell-card):focus-visible .stats{
+  right:-8px !important;
+  top:8px !important;
+}
+
+/* Slightly tighter on short screens. */
+@media(max-height:700px){
+  .hand .card:not(.spell-card) .stats,
+  .hand .card:not(.spell-card):hover .stats,
+  .hand .card:not(.spell-card).hand-selected .stats,
+  .hand .card:not(.spell-card):focus-visible .stats{
+    top:6px !important;
+  }
+}
+
+
+/* =========================================================
+   BOARD CREATURE STATS — FIXED 3-COLUMN POSITIONS
+   LEFT   : ATTACK
+   CENTER : COUNTER
+   RIGHT  : HEALTH
+   If Counter is missing, the center remains empty.
+   ========================================================= */
+
+.board .slot .card:not(.spell-card) .stats{
+  position:absolute !important;
+
+  left:4px !important;
+  right:4px !important;
+  top:-7px !important;
+  bottom:auto !important;
+
+  z-index:125 !important;
+
+  display:grid !important;
+  grid-template-columns:1fr 1fr 1fr !important;
+  grid-template-rows:auto !important;
+  grid-auto-flow:dense !important;
+  align-items:center !important;
+
+  width:auto !important;
+  height:auto !important;
+
+  gap:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+
+  transform:none !important;
+}
+
+/* Attack always occupies the left position. */
+.board .slot .card:not(.spell-card) .stats .atk{
+  grid-column:1 !important;
+  justify-self:start !important;
+  order:initial !important;
+}
+
+/* Counter always occupies the center position. */
+.board .slot .card:not(.spell-card) .stats .counter{
+  grid-column:2 !important;
+  justify-self:center !important;
+  order:initial !important;
+}
+
+/* Health always occupies the right position. */
+.board .slot .card:not(.spell-card) .stats .hp{
+  grid-column:3 !important;
+  justify-self:end !important;
+  order:initial !important;
+}
+
+/* Keep all badges the same compact size. */
+.board .slot .card:not(.spell-card) .stats > span{
+  min-width:22px !important;
+  min-height:18px !important;
+
+  padding:2px 3px !important;
+  margin:0 !important;
+}
+
+/* Counter absence does not move ATK or HP inward. */
+.board .slot .card:not(.spell-card) .stats:not(:has(.counter)) .atk{
+  grid-column:1 !important;
+}
+
+.board .slot .card:not(.spell-card) .stats:not(:has(.counter)) .hp{
+  grid-column:3 !important;
+}
+
+/* Fallback for browsers without :has support:
+   explicit column assignments above already preserve the layout. */
+
+.hand .board-status-icons,
+.hand .board-keyword-icons,
+.discard-mini-card .board-status-icons,
+.discard-mini-card .board-keyword-icons{
+  display:none !important;
+}
+
+.board .slot .card .board-status-icons,
+.board .slot .card .board-keyword-icons{
+  position:absolute;
+  z-index:124;
+  pointer-events:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+
+.board .slot .card .board-status-icons{
+  left:5px;
+  right:5px;
+  top:15px;
+  flex-wrap:wrap;
+}
+
+.board .slot .card .board-keyword-icons{
+  left:5px;
+  right:5px;
+  bottom:27px;
+  flex-wrap:nowrap;
+  overflow:hidden;
+}
+
+.board .slot .card .board-status-chip,
+.board .slot .card .board-keyword-chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:999px;
+  color:#f8fbff;
+  font-weight:950;
+  line-height:1;
+  text-shadow:0 1px 2px rgba(0,0,0,.75);
+  box-shadow:0 4px 10px rgba(0,0,0,.28);
+}
+
+.board .slot .card .board-status-chip{
+  min-width:15px;
+  height:15px;
+  padding:0 3px;
+  font-size:9px;
+}
+
+.board .slot .card .board-keyword-chip{
+  min-width:14px;
+  height:12px;
+  padding:0 2px;
+  font-size:8px;
+  opacity:.9;
+}
+
+.board .slot .card .board-status-chip b,
+.board .slot .card .board-keyword-chip b{
+  display:block;
+  font-style:normal;
+  line-height:1;
+}
+
+.board .slot .card .board-status-chip em,
+.board .slot .card .board-keyword-chip em{
+  display:block;
+  margin-left:1px;
+  font-size:7px;
+  line-height:1;
+  font-style:normal;
+  transform:translateY(-2px);
+}
+
+.board .slot .card.has-board-shield{
+  box-shadow:
+    0 0 0 2px rgba(113,203,255,.24),
+    0 0 18px rgba(88,185,255,.28),
+    0 11px 22px rgba(0,0,0,.32) !important;
+}
+
+.board .slot .card.has-board-shield::after{
+  content:"";
+  position:absolute;
+  inset:14px 15px 31px;
+  z-index:1;
+  pointer-events:none;
+  border-radius:18px 18px 22px 22px;
+  background:
+    linear-gradient(180deg,rgba(136,219,255,.22),rgba(94,164,255,.08));
+  clip-path:polygon(50% 0,88% 16%,80% 72%,50% 100%,20% 72%,12% 16%);
+  filter:drop-shadow(0 0 9px rgba(111,202,255,.35));
+}
+
+.board .slot .card .status-shield{
+  background:linear-gradient(180deg,rgba(118,209,255,.92),rgba(47,103,190,.9));
+}
+
+.board .slot .card .status-poison{
+  background:linear-gradient(180deg,rgba(163,255,111,.92),rgba(57,130,42,.9));
+}
+
+.board .slot .card .status-stealth{
+  background:linear-gradient(180deg,rgba(181,159,255,.92),rgba(70,55,145,.9));
+}
+
+.board .slot .card .status-rebirth{
+  background:linear-gradient(180deg,rgba(255,207,124,.92),rgba(153,88,28,.9));
+}
+
+.board .slot .card .status-regen{
+  background:linear-gradient(180deg,rgba(117,255,174,.92),rgba(35,130,82,.9));
+}
+
+.board .slot .card .keyword-pierce{
+  background:rgba(255,214,92,.76);
+  color:#211703;
+}
+
+.board .slot .card .keyword-lifesteal{
+  background:rgba(255,92,116,.78);
+}
+
+.board .slot .card .keyword-splash{
+  background:rgba(255,139,73,.78);
+}
+
+.board .slot .card .keyword-execute,
+.board .slot .card .keyword-sniper{
+  background:rgba(210,223,240,.78);
+  color:#101827;
+}
+
+.board .slot .card .keyword-fury{
+  background:rgba(255,82,42,.84);
+}
+
+.board .slot .card .board-passive-icons{
+  position:absolute;
+  z-index:126;
+  left:4px;
+  right:4px;
+  bottom:-7px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  pointer-events:none;
+}
+
+.hand .board-passive-icons,
+.discard-mini-card .board-passive-icons{
+  display:none !important;
+}
+
+.board .slot .card .board-passive-chip{
+  position:relative;
+  min-width:16px;
+  height:16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 3px;
+  border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;
+  color:#f8fbff;
+  background:rgba(7,11,21,.88);
+  box-shadow:0 5px 12px rgba(0,0,0,.38);
+  font-size:9px;
+  line-height:1;
+  font-weight:950;
+  text-shadow:0 1px 2px rgba(0,0,0,.8);
+}
+
+.board .slot .card .board-passive-chip b{
+  display:block;
+  font-style:normal;
+  line-height:1;
+}
+
+.board .slot .card .board-passive-chip em{
+  margin-left:1px;
+  font-size:7px;
+  line-height:1;
+  font-style:normal;
+  transform:translateY(-2px);
+}
+
+.board .slot .card .passive-shield{
+  background:linear-gradient(180deg,rgba(118,209,255,.94),rgba(47,103,190,.92));
+}
+
+.board .slot .card .passive-shield b{
+  font-size:10px;
+  transform:translateY(-.5px);
+}
+
+.board .slot .card .passive-poison,
+.board .slot .card .passive-poisoned{
+  background:linear-gradient(180deg,rgba(163,255,111,.94),rgba(57,130,42,.92));
+}
+
+.board .slot .card .passive-stealth{
+  background:linear-gradient(180deg,rgba(181,159,255,.94),rgba(70,55,145,.92));
+}
+
+.board .slot .card .passive-rebirth{
+  background:linear-gradient(180deg,rgba(255,207,124,.94),rgba(153,88,28,.92));
+}
+
+.board .slot .card .passive-regen,
+.board .slot .card .passive-heal-row,
+.board .slot .card .passive-heal-hand{
+  background:linear-gradient(180deg,rgba(117,255,174,.94),rgba(35,130,82,.92));
+}
+
+.board .slot .card .passive-pierce{
+  background:rgba(255,214,92,.86);
+  color:#211703;
+}
+
+.board .slot .card .passive-lifesteal{
+  background:rgba(255,92,116,.86);
+}
+
+.board .slot .card .passive-splash{
+  background:rgba(255,139,73,.86);
+}
+
+.board .slot .card .passive-execute,
+.board .slot .card .passive-sniper{
+  background:rgba(210,223,240,.88);
+  color:#101827;
+}
+
+.board .slot .card .passive-fury{
+  background:rgba(255,82,42,.9);
+}
+
+.board .slot .card .passive-quick{
+  background:rgba(255,232,92,.9);
+  color:#181101;
+}
+
+/* Legacy passive rows are no longer used after the bottom-edge bar update. */
+.board .slot .card .board-status-icons,
+.board .slot .card .board-keyword-icons{
+  display:none !important;
+}
+
+.board .slot .card:not(.spell-card) .card-info{
+  left:5px !important;
+  right:5px !important;
+  bottom:9px !important;
+  padding:2px 4px !important;
+  min-height:0 !important;
+  border-radius:8px !important;
+  background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.36)) !important;
+}
+
+.board .slot .card:not(.spell-card) .name{
+  display:block !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  white-space:nowrap !important;
+  text-overflow:ellipsis !important;
+  font-size:7px !important;
+  line-height:1 !important;
+  opacity:.72 !important;
+}
+
+.board .slot .card:not(.spell-card):hover .name,
+.board .slot .card:not(.spell-card).attack-active .name{
+  opacity:1 !important;
+}
+
+.board .slot .card:not(.spell-card) .type{
+  display:none !important;
+}
+
+@media(max-height:700px){
+  .board .slot .card:not(.spell-card) .stats{
+    top:-6px !important;
+  }
+
+  .board .slot .card .board-status-icons{
+    top:14px;
+  }
+
+  .board .slot .card .board-keyword-icons{
+    bottom:25px;
+  }
+}
+
+
+/* =========================================================
+   SPELL HAND INFO — TOP RIGHT
+   Show spell area/timing instead of internal effect value.
+   ========================================================= */
+
+.hand .card.spell-card{
+  position:relative !important;
+  overflow:visible !important;
+}
+
+.hand .card.spell-card .stats{
+  position:absolute !important;
+
+  left:auto !important;
+  right:-8px !important;
+  top:8px !important;
+  bottom:auto !important;
+
+  z-index:120 !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:5px !important;
+
+  width:auto !important;
+  min-width:30px !important;
+
+  margin:0 !important;
+  padding:4px 3px !important;
+
+  transform:none !important;
+}
+
+.hand .card.spell-card .stats .spell-badge{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:3px !important;
+
+  min-width:30px !important;
+  min-height:23px !important;
+
+  padding:2px 4px !important;
+  margin:0 !important;
+
+  color:#9edcff !important;
+  background:rgba(6,14,25,.84) !important;
+  border:1px solid rgba(123,202,255,.28) !important;
+  border-radius:8px !important;
+
+  box-shadow:
+    0 3px 8px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+
+  font-size:12px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+.hand .card.spell-card .stats .spell-badge b,
+.hand .card.spell-card .stats .spell-badge em{
+  display:block !important;
+  font-style:normal !important;
+  line-height:1 !important;
+}
+
+.hand .card.spell-card .stats .spell-badge em{
+  font-size:8px !important;
+  font-weight:950 !important;
+  letter-spacing:.02em !important;
+}
+
+.hand .card.spell-card:hover .stats,
+.hand .card.spell-card.hand-selected .stats,
+.hand .card.spell-card:focus-visible .stats{
+  right:-8px !important;
+  top:8px !important;
+}
+
+/* =========================================================
+   CARD DETAIL / DESCRIPTION MODE — TOP RIGHT ATTRIBUTES
+   ========================================================= */
+
+.inspect-card{
+  position:relative !important;
+  overflow:visible !important;
+}
+
+/* Move the attribute group from bottom-right to top-right. */
+.inspect-card-stats{
+  position:absolute !important;
+
+  left:auto !important;
+  right:16px !important;
+  top:16px !important;
+  bottom:auto !important;
+
+  z-index:5 !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* Fixed order: Attack, Counter, Health. */
+.inspect-card-stats .inspect-stat.attack{
+  order:1 !important;
+}
+
+.inspect-card-stats .inspect-stat.counter{
+  order:2 !important;
+}
+
+.inspect-card-stats .inspect-stat.health{
+  order:3 !important;
+}
+
+/* Detail badges match the hand's vertical presentation. */
+.inspect-card-stats .inspect-stat{
+  min-width:58px !important;
+  width:auto !important;
+  height:48px !important;
+
+  padding:0 12px !important;
+  margin:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+
+  border-radius:14px !important;
+  background:rgba(7,11,21,.90) !important;
+  border:2px solid rgba(255,255,255,.28) !important;
+
+  box-shadow:
+    0 5px 13px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.05) !important;
+
+  font-size:20px !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+.inspect-card-stats .inspect-stat span,
+.inspect-card-stats .inspect-stat em{
+  display:block !important;
+  font-style:normal !important;
+  line-height:1 !important;
+}
+
+.inspect-card-stats .inspect-stat em{
+  transform:translateY(-6px) !important;
+  font-size:12px !important;
+  font-weight:950 !important;
+}
+
+.inspect-card-stats .inspect-stat em.positive{
+  color:#79ff9d !important;
+}
+
+.inspect-card-stats .inspect-stat em.negative{
+  color:#ff7474 !important;
+}
+
+/* Spell detail uses compact area/timing icons at the top-right. */
+.inspect-card.spell .inspect-card-stats{
+  right:16px !important;
+  top:16px !important;
+  gap:6px !important;
+}
+
+.inspect-card.spell .inspect-card-stats .inspect-stat{
+  color:#9edcff !important;
+  border-color:rgba(123,202,255,.34) !important;
+}
+
+/*
+  Cost remains on the top-left.
+  Attributes remain on the top-right.
+*/
+.inspect-card-cost{
+  left:16px !important;
+  right:auto !important;
+  top:16px !important;
+  bottom:auto !important;
+}
+
+/* Prevent the detail card title from colliding with top-right stats. */
+.inspect-card-name{
+  padding-right:86px !important;
+}
+
+/* Short screens use tighter badges but keep the same placement. */
+@media(max-height:700px){
+  .hand .card.spell-card .stats,
+  .hand .card.spell-card:hover .stats,
+  .hand .card.spell-card.hand-selected .stats,
+  .hand .card.spell-card:focus-visible .stats{
+    top:6px !important;
+  }
+
+  .inspect-card-stats{
+    top:12px !important;
+    right:12px !important;
+    gap:5px !important;
+  }
+
+  .inspect-card-stats .inspect-stat{
+    min-width:52px !important;
+    height:42px !important;
+    font-size:17px !important;
+  }
+}
+
+
+/* =========================================================
+   BOARD TOP / BOTTOM INNER GAP — RESTORED
+   ========================================================= */
+
+.board{
+  box-sizing:border-box !important;
+
+  /* Real space between the visual board edge and card slots. */
+  padding-top:20px !important;
+  padding-bottom:20px !important;
+  padding-block:20px !important;
+}
+
+/* Do not let older centering rules cancel the inner spacing. */
+.board > .board-grid,
+.board-grid{
+  box-sizing:border-box !important;
+
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+
+  align-content:center !important;
+}
+
+/* Keep a usable gap on shorter screens. */
+@media(max-height:760px){
+  .board{
+    padding-top:14px !important;
+    padding-bottom:14px !important;
+    padding-block:14px !important;
+  }
+}
+
+@media(max-height:640px){
+  .board{
+    padding-top:10px !important;
+    padding-bottom:10px !important;
+    padding-block:10px !important;
+  }
+}
+
+/* =========================================================
+   DETAIL CARD — RESTORE ROUNDED IMAGE MASK
+   ========================================================= */
+
+/*
+  Previous top-right stat positioning set overflow to visible.
+  That caused the artwork to escape the card's rounded corners.
+*/
+.inspect-card{
+  position:relative !important;
+  overflow:hidden !important;
+  isolation:isolate !important;
+
+  border-radius:28px !important;
+
+  /* Extra browser-safe clipping for the complete card. */
+  clip-path:inset(0 round 28px) !important;
+  -webkit-clip-path:inset(0 round 28px) !important;
+}
+
+/* Explicitly mask the illustration area at the upper corners. */
+.inspect-card-art{
+  overflow:hidden !important;
+
+  border-radius:25px 25px 0 0 !important;
+
+  clip-path:inset(0 round 25px 25px 0 0) !important;
+  -webkit-clip-path:inset(0 round 25px 25px 0 0) !important;
+}
+
+/* The image itself follows the artwork mask exactly. */
+.inspect-card-art img{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+
+  object-fit:cover !important;
+
+  border-radius:25px 25px 0 0 !important;
+}
+
+/* Keep overlays and attributes inside the masked card. */
+.inspect-card-cost,
+.inspect-card-stats,
+.inspect-card-body{
+  z-index:5 !important;
+}
+
+.inspect-passive-icons{
+  position:absolute;
+  z-index:6;
+  left:18px;
+  right:auto;
+  bottom:18px;
+  max-width:calc(100% - 36px);
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-start;
+  gap:6px;
+  pointer-events:none;
+}
+
+.inspect-passive-chip{
+  min-width:30px;
+  height:30px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  padding:0 8px;
+  border:1px solid rgba(255,255,255,.24);
+  border-radius:999px;
+  color:#f8fbff;
+  background:rgba(7,11,21,.88);
+  box-shadow:0 8px 18px rgba(0,0,0,.38);
+  font-size:16px;
+  line-height:1;
+  font-weight:950;
+  text-shadow:0 1px 2px rgba(0,0,0,.78);
+}
+
+.inspect-passive-chip b{
+  display:block;
+  font-style:normal;
+  line-height:1;
+}
+
+.inspect-passive-chip em{
+  font-size:10px;
+  line-height:1;
+  font-style:normal;
+  transform:translateY(-4px);
+}
+
+.inspect-ability-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+
+.inspect-ability-grid .inspect-passive-chip{
+  min-width:0;
+  height:34px;
+  justify-content:flex-start;
+  padding:0 10px;
+  border-radius:12px;
+  font-size:15px;
+}
+
+.inspect-ability-grid .inspect-passive-chip strong{
+  min-width:0;
+  overflow:hidden;
+  color:#e8effb;
+  font-size:11px;
+  line-height:1;
+  font-weight:900;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.inspect-card-body{
+  padding-bottom:58px !important;
+}
+
+.inspect-passive-chip.passive-shield{
+  background:linear-gradient(180deg,rgba(118,209,255,.94),rgba(47,103,190,.92));
+}
+
+.inspect-passive-chip.passive-shield b{
+  font-size:15px;
+  transform:translateY(-1px);
+}
+
+.inspect-passive-chip.passive-poison,
+.inspect-passive-chip.passive-poisoned{
+  background:linear-gradient(180deg,rgba(163,255,111,.94),rgba(57,130,42,.92));
+}
+
+.inspect-passive-chip.passive-stealth{
+  background:linear-gradient(180deg,rgba(181,159,255,.94),rgba(70,55,145,.92));
+}
+
+.inspect-passive-chip.passive-rebirth{
+  background:linear-gradient(180deg,rgba(255,207,124,.94),rgba(153,88,28,.92));
+}
+
+.inspect-passive-chip.passive-regen,
+.inspect-passive-chip.passive-heal-row,
+.inspect-passive-chip.passive-heal-hand{
+  background:linear-gradient(180deg,rgba(117,255,174,.94),rgba(35,130,82,.92));
+}
+
+.inspect-passive-chip.passive-pierce,
+.inspect-passive-chip.passive-quick{
+  background:rgba(255,214,92,.9);
+  color:#211703;
+}
+
+.inspect-passive-chip.passive-lifesteal{
+  background:rgba(255,92,116,.88);
+}
+
+.inspect-passive-chip.passive-splash{
+  background:rgba(255,139,73,.88);
+}
+
+.inspect-passive-chip.passive-execute,
+.inspect-passive-chip.passive-sniper{
+  background:rgba(210,223,240,.9);
+  color:#101827;
+}
+
+.inspect-passive-chip.passive-fury{
+  background:rgba(255,82,42,.9);
+}
+
+.inspect-passive-chip.passive-shared,
+.inspect-passive-chip.passive-field{
+  background:linear-gradient(180deg,rgba(100,210,255,.94),rgba(53,92,193,.92));
+}
+
+.inspect-passive-chip.passive-friendly-row,
+.inspect-passive-chip.passive-any-row{
+  background:linear-gradient(180deg,rgba(111,231,164,.94),rgba(39,138,89,.92));
+}
+
+.inspect-passive-chip.passive-enemy-row{
+  background:linear-gradient(180deg,rgba(255,129,139,.94),rgba(169,48,65,.92));
+}
+
+.inspect-passive-chip.passive-trap{
+  background:linear-gradient(180deg,rgba(255,200,98,.94),rgba(150,86,23,.92));
+}
+
+.inspect-passive-chip.passive-ongoing,
+.inspect-passive-chip.passive-instant,
+.inspect-passive-chip.passive-spell-slot,
+.inspect-passive-chip.passive-target{
+  background:rgba(210,223,240,.9);
+  color:#101827;
+}
+
+/* =========================================================
+   HAND HOVER — BIGGER + FULLY VISIBLE
+   ========================================================= */
+
+.hand,
+.hand-panel,
+.bottom-ui{
+  overflow:visible !important;
+}
+
+.hand .card{
+  transform-origin:center bottom !important;
+
+  transition:
+    transform .22s cubic-bezier(.2,.8,.2,1),
+    filter .2s ease,
+    border-color .2s ease,
+    outline-color .2s ease,
+    box-shadow .22s ease !important;
+
+  will-change:transform !important;
+}
+
+/*
+  The normal card extends below the viewport.
+  A larger upward lift reveals the full card before scaling it.
+*/
+.hand .card:hover,
+.hand .card.hand-selected,
+.hand .card:focus-visible{
+  z-index:12000 !important;
+
+  transform:
+    translateY(-86px)
+    scale(1.16) !important;
+
+  filter:brightness(1.07) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(150,218,255,.42),
+    0 34px 58px rgba(0,0,0,.68),
+    0 0 28px rgba(72,174,255,.22) !important;
+}
+
+/* Edge cards enlarge toward the inside of the screen. */
+.hand .card:first-child{
+  transform-origin:left bottom !important;
+}
+
+.hand .card:last-child{
+  transform-origin:right bottom !important;
+}
+
+/* Stats stay attached to the enlarged card's upper-right corner. */
+.hand .card:not(.spell-card):hover .stats,
+.hand .card:not(.spell-card).hand-selected .stats,
+.hand .card:not(.spell-card):focus-visible .stats,
+.hand .card.spell-card:hover .stats,
+.hand .card.spell-card.hand-selected .stats,
+.hand .card.spell-card:focus-visible .stats{
+  top:8px !important;
+  right:-8px !important;
+}
+
+/* Safer size for short displays while remaining fully revealed. */
+@media(max-height:680px){
+  .hand .card:hover,
+  .hand .card.hand-selected,
+  .hand .card:focus-visible{
+    transform:
+      translateY(-78px)
+      scale(1.11) !important;
+  }
+}
+
+/* =========================================================
+   FINAL FIX: attack/counter/hp badges must never wrap.
+   ========================================================= */
+.board .slot .card .stats,
+.board .slot .card:not(.spell-card) .stats,
+.hand .card .stats{
+  flex-wrap:nowrap !important;
+}
+
+.board .slot .card .stats > span,
+.board .slot .card:not(.spell-card) .stats > span,
+.hand .card .stats > span{
+  white-space:nowrap !important;
+  overflow:visible !important;
+  flex-shrink:0 !important;
+}
+
+/* Stat badges affected by spells or temporary effects. */
+.card:not(.spell-card) .stats > span.stat-modified,
+.inspect-card-stats .inspect-stat.stat-modified{
+  position:relative !important;
+}
+
+.card:not(.spell-card) .stats > span.stat-buffed::after{
+  content:"";
+  position:absolute;
+  right:-3px;
+  top:-3px;
+  width:5px;
+  height:5px;
+  border-radius:999px;
+  background:#79ffb4;
+  box-shadow:
+    0 0 0 1px rgba(6,14,25,.92),
+    0 0 5px rgba(121,255,180,.65);
+}
+
+.card:not(.spell-card) .stats > span.stat-debuffed::after{
+  content:"";
+  position:absolute;
+  right:-3px;
+  top:-3px;
+  width:5px;
+  height:5px;
+  border-radius:999px;
+  background:#ff7878;
+  box-shadow:
+    0 0 0 1px rgba(6,14,25,.92),
+    0 0 5px rgba(255,120,120,.62);
+}
+
+.board .slot .card:not(.spell-card) .stats > span.stat-buffed::after,
+.board .slot .card:not(.spell-card) .stats > span.stat-debuffed::after{
+  right:-2px;
+  top:-2px;
+  width:4px;
+  height:4px;
+  box-shadow:
+    0 0 0 1px rgba(6,14,25,.9),
+    0 0 4px currentColor;
+}
+
+/* =========================================================
+   FINAL BOARD COMPACT PASS
+   Center board names and keep spell attributes as small icons.
+   ========================================================= */
+
+.board .slot .card .card-info{
+  position:absolute !important;
+  left:5px !important;
+  right:5px !important;
+  bottom:9px !important;
+  z-index:123 !important;
+
+  min-height:0 !important;
+  padding:2px 4px !important;
+  border-radius:8px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  text-align:center !important;
+  background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.36)) !important;
+}
+
+.board .slot .card .name{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+  text-overflow:ellipsis !important;
+  font-size:7px !important;
+  line-height:1 !important;
+  opacity:.74 !important;
+}
+
+.board .slot .card:hover .name,
+.board .slot .card.attack-active .name,
+.board .slot .card.hand-selected .name{
+  opacity:1 !important;
+}
+
+.board .slot .card .type{
+  display:none !important;
+}
+
+.board .slot .card.spell-card .stats{
+  position:absolute !important;
+  left:4px !important;
+  right:4px !important;
+  top:-7px !important;
+  bottom:auto !important;
+  z-index:125 !important;
+
+  display:grid !important;
+  grid-template-columns:1fr 1fr 1fr !important;
+  align-items:center !important;
+  gap:0 !important;
+
+  width:auto !important;
+  height:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:none !important;
+}
+
+.board .slot .card.spell-card .stats .atk{
+  grid-column:1 !important;
+  justify-self:start !important;
+}
+
+.board .slot .card.spell-card .stats .duration{
+  grid-column:2 !important;
+  justify-self:center !important;
+}
+
+.board .slot .card.spell-card .stats .hp{
+  grid-column:3 !important;
+  justify-self:end !important;
+}
+
+.board .slot .card.spell-card .stats .spell-badge,
+.board .slot .card.spell-card .stats .duration{
+  min-width:19px !important;
+  min-height:18px !important;
+  height:18px !important;
+  padding:1px 4px !important;
+  margin:0 !important;
+
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  border:1px solid rgba(255,255,255,.24) !important;
+  border-radius:999px !important;
+  box-shadow:0 5px 12px rgba(0,0,0,.38) !important;
+
+  font-size:10px !important;
+  line-height:1 !important;
+}
+
+.board .slot .card.spell-card .stats .spell-badge em{
+  display:none !important;
+}
+
+.board .slot .card.spell-card .stats .spell-shared,
+.board .slot .card.spell-card .stats .spell-field{
+  color:#eff9ff !important;
+  background:linear-gradient(180deg,rgba(100,210,255,.94),rgba(53,92,193,.92)) !important;
+}
+
+.board .slot .card.spell-card .stats .spell-friendly-row,
+.board .slot .card.spell-card .stats .spell-any-row{
+  color:#effff6 !important;
+  background:linear-gradient(180deg,rgba(111,231,164,.94),rgba(39,138,89,.92)) !important;
+}
+
+.board .slot .card.spell-card .stats .spell-enemy-row{
+  color:#fff7f8 !important;
+  background:linear-gradient(180deg,rgba(255,129,139,.94),rgba(169,48,65,.92)) !important;
+}
+
+.board .slot .card.spell-card .stats .spell-trap{
+  color:#221504 !important;
+  background:linear-gradient(180deg,rgba(255,210,96,.96),rgba(227,141,34,.92)) !important;
+}
+
+.board .slot .card.spell-card .stats .spell-instant,
+.board .slot .card.spell-card .stats .spell-ongoing,
+.board .slot .card.spell-card .stats .spell-spell-slot,
+.board .slot .card.spell-card .stats .spell-target{
+  color:#101827 !important;
+  background:rgba(210,223,240,.92) !important;
+}
+
+/* On-board spell location is already implied by the slot.
+   Keep only trap state and remaining duration to avoid duplicate badges. */
+.board .slot .card.spell-card .stats .spell-badge{
+  display:none !important;
+}
+
+.board .slot .card.spell-card .stats .spell-trap{
+  display:inline-flex !important;
+  grid-column:1 !important;
+  justify-self:start !important;
+}
+
+.board .slot .card.spell-card .stats .duration{
+  grid-column:3 !important;
+  justify-self:end !important;
+}
+
+/* =========================================================
+   RESPONSIVE PORTRAIT BOARD
+   Deck/Discard become landscape side piles behind each back row.
+   ========================================================= */
+
+@media(orientation:portrait), (max-width:760px){
+  .board{
+    width:620px !important;
+    min-width:620px !important;
+    max-width:none !important;
+    --board-responsive-scale:.68;
+  }
+
+  .board-grid{
+    width:max-content !important;
+    grid-template-columns:64px 69px repeat(3,86px) 69px 64px !important;
+    column-gap:8px !important;
+    row-gap:6px !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+
+  .board-grid > .shared-gap{
+    display:none !important;
+  }
+
+  #enemyDeckPile{
+    grid-row:1 !important;
+    grid-column:1 !important;
+  }
+
+  #enemySpellBack{
+    grid-row:1 !important;
+    grid-column:2 !important;
+  }
+
+  #enemyBack_0{
+    grid-row:1 !important;
+    grid-column:3 !important;
+  }
+
+  #enemyBack_1{
+    grid-row:1 !important;
+    grid-column:4 !important;
+  }
+
+  #enemyBack_2{
+    grid-row:1 !important;
+    grid-column:5 !important;
+  }
+
+  #enemyDiscardPile{
+    grid-row:1 !important;
+    grid-column:7 !important;
+  }
+
+  #enemySpellFront{
+    grid-row:2 !important;
+    grid-column:2 !important;
+  }
+
+  #enemyFront_0{
+    grid-row:2 !important;
+    grid-column:3 !important;
+  }
+
+  #enemyFront_1{
+    grid-row:2 !important;
+    grid-column:4 !important;
+  }
+
+  #enemyFront_2{
+    grid-row:2 !important;
+    grid-column:5 !important;
+  }
+
+  .enemy-divider{
+    grid-row:3 !important;
+    grid-column:1 / -1 !important;
+  }
+
+  #sharedSpell_0{
+    grid-row:4 !important;
+    grid-column:3 !important;
+  }
+
+  #sharedSpell_1{
+    grid-row:4 !important;
+    grid-column:4 !important;
+  }
+
+  #sharedSpell_2{
+    grid-row:4 !important;
+    grid-column:5 !important;
+  }
+
+  .player-divider{
+    grid-row:5 !important;
+    grid-column:1 / -1 !important;
+  }
+
+  #playerFront_0{
+    grid-row:6 !important;
+    grid-column:3 !important;
+  }
+
+  #playerFront_1{
+    grid-row:6 !important;
+    grid-column:4 !important;
+  }
+
+  #playerFront_2{
+    grid-row:6 !important;
+    grid-column:5 !important;
+  }
+
+  #playerSpellFront{
+    grid-row:6 !important;
+    grid-column:6 !important;
+  }
+
+  #playerDeckPile{
+    grid-row:7 !important;
+    grid-column:1 !important;
+  }
+
+  #playerBack_0{
+    grid-row:7 !important;
+    grid-column:3 !important;
+  }
+
+  #playerBack_1{
+    grid-row:7 !important;
+    grid-column:4 !important;
+  }
+
+  #playerBack_2{
+    grid-row:7 !important;
+    grid-column:5 !important;
+  }
+
+  #playerSpellBack{
+    grid-row:7 !important;
+    grid-column:6 !important;
+  }
+
+  #playerDiscardPile{
+    grid-row:7 !important;
+    grid-column:7 !important;
+  }
+
+  .board-grid > .pile,
+  #playerDeckPile,
+  #playerDiscardPile,
+  #enemyDeckPile,
+  #enemyDiscardPile{
+    width:64px !important;
+    min-width:64px !important;
+    max-width:64px !important;
+    height:48px !important;
+    min-height:48px !important;
+    max-height:48px !important;
+    aspect-ratio:4 / 3 !important;
+    align-self:center !important;
+    justify-self:center !important;
+  }
+
+  .board-grid > .pile::before,
+  .board-grid > .pile::after,
+  .board-grid > .pile > .pile-card{
+    width:58px !important;
+    height:42px !important;
+    border-radius:9px !important;
+  }
+
+  .board-grid > .pile::before{
+    transform:translate(calc(-50% + 5px),calc(-50% - 5px)) rotate(3deg) !important;
+  }
+
+  .board-grid > .pile::after{
+    transform:translate(calc(-50% + 2px),calc(-50% - 2px)) rotate(-2deg) !important;
+  }
+
+  .board-grid > .pile > .pile-card{
+    transform:translate(-50%,-50%) !important;
+  }
+
+  .board-grid > .pile > strong{
+    left:50% !important;
+    right:auto !important;
+    top:50% !important;
+    transform:translate(-50%,-54%) !important;
+    min-width:24px !important;
+    max-width:none !important;
+    padding:2px 6px !important;
+    border-radius:999px !important;
+    color:#f5fbff !important;
+    background:rgba(3,8,18,.72) !important;
+    box-shadow:0 4px 10px rgba(0,0,0,.34) !important;
+    font-size:13px !important;
+    line-height:1 !important;
+    text-align:center !important;
+    text-shadow:0 1px 2px rgba(0,0,0,.75) !important;
+  }
+
+  .board-grid > .pile > span{
+    display:none !important;
+  }
+}
+
+@media(orientation:portrait) and (max-width:430px){
+  .board{
+    --board-responsive-scale:.58;
+  }
+}
+
+@media(orientation:portrait) and (max-height:760px){
+  .board{
+    --board-responsive-scale:.56;
+  }
+}
+
+/* Portrait correction:
+   Piles sit between each hand and its back row, not beside the back row. */
+@media(orientation:portrait), (max-width:760px){
+  .board{
+    --board-responsive-scale:.62;
+  }
+
+  .board-grid{
+    row-gap:5px !important;
+  }
+
+  #enemyDeckPile{
+    grid-row:1 !important;
+    grid-column:1 !important;
+  }
+
+  #enemyDiscardPile{
+    grid-row:1 !important;
+    grid-column:7 !important;
+  }
+
+  #enemySpellBack{
+    grid-row:2 !important;
+    grid-column:2 !important;
+  }
+
+  #enemyBack_0{
+    grid-row:2 !important;
+    grid-column:3 !important;
+  }
+
+  #enemyBack_1{
+    grid-row:2 !important;
+    grid-column:4 !important;
+  }
+
+  #enemyBack_2{
+    grid-row:2 !important;
+    grid-column:5 !important;
+  }
+
+  #enemySpellFront{
+    grid-row:3 !important;
+    grid-column:2 !important;
+  }
+
+  #enemyFront_0{
+    grid-row:3 !important;
+    grid-column:3 !important;
+  }
+
+  #enemyFront_1{
+    grid-row:3 !important;
+    grid-column:4 !important;
+  }
+
+  #enemyFront_2{
+    grid-row:3 !important;
+    grid-column:5 !important;
+  }
+
+  .enemy-divider{
+    grid-row:4 !important;
+    grid-column:1 / -1 !important;
+  }
+
+  #sharedSpell_0{
+    grid-row:5 !important;
+    grid-column:3 !important;
+  }
+
+  #sharedSpell_1{
+    grid-row:5 !important;
+    grid-column:4 !important;
+  }
+
+  #sharedSpell_2{
+    grid-row:5 !important;
+    grid-column:5 !important;
+  }
+
+  .player-divider{
+    grid-row:6 !important;
+    grid-column:1 / -1 !important;
+  }
+
+  #playerFront_0{
+    grid-row:7 !important;
+    grid-column:3 !important;
+  }
+
+  #playerFront_1{
+    grid-row:7 !important;
+    grid-column:4 !important;
+  }
+
+  #playerFront_2{
+    grid-row:7 !important;
+    grid-column:5 !important;
+  }
+
+  #playerSpellFront{
+    grid-row:7 !important;
+    grid-column:6 !important;
+  }
+
+  #playerBack_0{
+    grid-row:8 !important;
+    grid-column:3 !important;
+  }
+
+  #playerBack_1{
+    grid-row:8 !important;
+    grid-column:4 !important;
+  }
+
+  #playerBack_2{
+    grid-row:8 !important;
+    grid-column:5 !important;
+  }
+
+  #playerSpellBack{
+    grid-row:8 !important;
+    grid-column:6 !important;
+  }
+
+  #playerDeckPile{
+    grid-row:9 !important;
+    grid-column:1 !important;
+  }
+
+  #playerDiscardPile{
+    grid-row:9 !important;
+    grid-column:7 !important;
+  }
+}
+
+@media(orientation:portrait) and (max-width:430px){
+  .board{
+    --board-responsive-scale:.54;
+  }
+}
+
+@media(orientation:portrait) and (max-height:760px){
+  .board{
+    --board-responsive-scale:.52;
+  }
+}
+
+/* Portrait pile alignment correction:
+   keep Deck/Discard near the center, left and right of the middle lane. */
+@media(orientation:portrait), (max-width:760px){
+  #enemyDeckPile{
+    grid-row:1 !important;
+    grid-column:3 !important;
+  }
+
+  #enemyDiscardPile{
+    grid-row:1 !important;
+    grid-column:5 !important;
+  }
+
+  #playerDeckPile{
+    grid-row:9 !important;
+    grid-column:3 !important;
+  }
+
+  #playerDiscardPile{
+    grid-row:9 !important;
+    grid-column:5 !important;
+  }
+}
+
+/* Final portrait pile shape fix.
+   Earlier ID selectors restore portrait pile-card dimensions, so match them here. */
+@media(orientation:portrait), (max-width:760px){
+  #enemyDeckPile,
+  #enemyDiscardPile,
+  #playerDeckPile,
+  #playerDiscardPile{
+    width:82px !important;
+    min-width:82px !important;
+    max-width:82px !important;
+    height:46px !important;
+    min-height:46px !important;
+    max-height:46px !important;
+    aspect-ratio:16 / 9 !important;
+    overflow:visible !important;
+  }
+
+  #enemyDeckPile::before,
+  #enemyDeckPile::after,
+  #enemyDiscardPile::before,
+  #enemyDiscardPile::after,
+  #playerDeckPile::before,
+  #playerDeckPile::after,
+  #playerDiscardPile::before,
+  #playerDiscardPile::after,
+  #enemyDeckPile > .pile-card,
+  #enemyDiscardPile > .pile-card,
+  #playerDeckPile > .pile-card,
+  #playerDiscardPile > .pile-card{
+    left:50% !important;
+    top:50% !important;
+    width:74px !important;
+    min-width:74px !important;
+    max-width:74px !important;
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+    border-radius:9px !important;
+  }
+
+  #enemyDeckPile::before,
+  #enemyDiscardPile::before,
+  #playerDeckPile::before,
+  #playerDiscardPile::before{
+    transform:translate(calc(-50% + 5px),calc(-50% - 5px)) rotate(2.5deg) !important;
+  }
+
+  #enemyDeckPile::after,
+  #enemyDiscardPile::after,
+  #playerDeckPile::after,
+  #playerDiscardPile::after{
+    transform:translate(calc(-50% + 2px),calc(-50% - 2px)) rotate(-1.5deg) !important;
+  }
+
+  #enemyDeckPile > .pile-card,
+  #enemyDiscardPile > .pile-card,
+  #playerDeckPile > .pile-card,
+  #playerDiscardPile > .pile-card{
+    transform:translate(-50%,-50%) !important;
+  }
+
+  #enemyDiscardPile.has-discard > .pile-card::before,
+  #enemyDiscardPile.has-discard > .pile-card::after,
+  #playerDiscardPile.has-discard > .pile-card::before,
+  #playerDiscardPile.has-discard > .pile-card::after{
+    border-radius:8px !important;
+    transform:translate(4px,-4px) !important;
+  }
+
+  #enemyDiscardPile.has-discard > .pile-card::after,
+  #playerDiscardPile.has-discard > .pile-card::after{
+    transform:translate(7px,-7px) !important;
+  }
+
+  #enemyDeckPile > strong,
+  #enemyDiscardPile > strong,
+  #playerDeckPile > strong,
+  #playerDiscardPile > strong{
+    left:50% !important;
+    right:auto !important;
+    top:50% !important;
+    transform:translate(-50%,-50%) !important;
+    min-width:22px !important;
+    padding:2px 6px !important;
+    font-size:12px !important;
+    line-height:1 !important;
+    text-align:center !important;
+  }
+
+  #enemyDeckPile > span,
+  #enemyDiscardPile > span,
+  #playerDeckPile > span,
+  #playerDiscardPile > span{
+    display:none !important;
+  }
+}
+
+/* Portrait board tightening:
+   reduce unused side columns so the board can scale up and fill the screen. */
+@media(orientation:portrait), (max-width:760px){
+  .board{
+    width:520px !important;
+    min-width:520px !important;
+    --board-responsive-scale:.78;
+  }
+
+  .board-grid{
+    grid-template-columns:54px 61px repeat(3,82px) 61px 54px !important;
+    column-gap:5px !important;
+    row-gap:4px !important;
+  }
+
+  .board-grid > .slot:not(.spell-slot){
+    width:82px !important;
+    min-width:82px !important;
+    max-width:82px !important;
+    min-height:104px !important;
+  }
+
+  .board .slot.spell-slot,
+  .board .slot.spell,
+  .board .slot.shared,
+  .board .slot.player-spell{
+    width:61px !important;
+    min-width:61px !important;
+    max-width:61px !important;
+    height:76px !important;
+    min-height:76px !important;
+  }
+
+  #enemyDeckPile,
+  #enemyDiscardPile,
+  #playerDeckPile,
+  #playerDiscardPile{
+    width:54px !important;
+    min-width:54px !important;
+    max-width:54px !important;
+    height:36px !important;
+    min-height:36px !important;
+    max-height:36px !important;
+  }
+
+  #enemyDeckPile::before,
+  #enemyDeckPile::after,
+  #enemyDiscardPile::before,
+  #enemyDiscardPile::after,
+  #playerDeckPile::before,
+  #playerDeckPile::after,
+  #playerDiscardPile::before,
+  #playerDiscardPile::after,
+  #enemyDeckPile > .pile-card,
+  #enemyDiscardPile > .pile-card,
+  #playerDeckPile > .pile-card,
+  #playerDiscardPile > .pile-card{
+    width:52px !important;
+    min-width:52px !important;
+    max-width:52px !important;
+    height:32px !important;
+    min-height:32px !important;
+    max-height:32px !important;
+    border-radius:7px !important;
+  }
+
+  #enemyDeckPile > strong,
+  #enemyDiscardPile > strong,
+  #playerDeckPile > strong,
+  #playerDiscardPile > strong{
+    min-width:20px !important;
+    padding:2px 5px !important;
+    font-size:11px !important;
+  }
+}
+
+@media(orientation:portrait) and (max-width:430px){
+  .board{
+    --board-responsive-scale:.70;
+  }
+}
+
+@media(orientation:portrait) and (max-height:760px){
+  .board{
+    --board-responsive-scale:.66;
+  }
+}
+
+/* Final mobile portrait compact layout:
+   five columns only, compact rails, bigger playable board. */
+@media(orientation:portrait), (max-width:760px){
+  .board{
+    width:430px !important;
+    min-width:430px !important;
+    max-width:none !important;
+    --board-responsive-scale:.92;
+  }
+
+  .board-grid{
+    grid-template-columns:58px repeat(3,82px) 58px !important;
+    column-gap:4px !important;
+    row-gap:4px !important;
+  }
+
+  #enemyDeckPile{
+    grid-row:1 !important;
+    grid-column:2 !important;
+  }
+
+  #enemyDiscardPile{
+    grid-row:1 !important;
+    grid-column:4 !important;
+  }
+
+  #enemySpellBack{
+    grid-row:2 !important;
+    grid-column:1 !important;
+  }
+
+  #enemyBack_0{
+    grid-row:2 !important;
+    grid-column:2 !important;
+  }
+
+  #enemyBack_1{
+    grid-row:2 !important;
+    grid-column:3 !important;
+  }
+
+  #enemyBack_2{
+    grid-row:2 !important;
+    grid-column:4 !important;
+  }
+
+  #enemySpellFront{
+    grid-row:3 !important;
+    grid-column:1 !important;
+  }
+
+  #enemyFront_0{
+    grid-row:3 !important;
+    grid-column:2 !important;
+  }
+
+  #enemyFront_1{
+    grid-row:3 !important;
+    grid-column:3 !important;
+  }
+
+  #enemyFront_2{
+    grid-row:3 !important;
+    grid-column:4 !important;
+  }
+
+  .enemy-divider{
+    grid-row:4 !important;
+    grid-column:1 / -1 !important;
+  }
+
+  #sharedSpell_0{
+    grid-row:5 !important;
+    grid-column:2 !important;
+  }
+
+  #sharedSpell_1{
+    grid-row:5 !important;
+    grid-column:3 !important;
+  }
+
+  #sharedSpell_2{
+    grid-row:5 !important;
+    grid-column:4 !important;
+  }
+
+  .player-divider{
+    grid-row:6 !important;
+    grid-column:1 / -1 !important;
+  }
+
+  #playerFront_0{
+    grid-row:7 !important;
+    grid-column:2 !important;
+  }
+
+  #playerFront_1{
+    grid-row:7 !important;
+    grid-column:3 !important;
+  }
+
+  #playerFront_2{
+    grid-row:7 !important;
+    grid-column:4 !important;
+  }
+
+  #playerSpellFront{
+    grid-row:7 !important;
+    grid-column:5 !important;
+  }
+
+  #playerBack_0{
+    grid-row:8 !important;
+    grid-column:2 !important;
+  }
+
+  #playerBack_1{
+    grid-row:8 !important;
+    grid-column:3 !important;
+  }
+
+  #playerBack_2{
+    grid-row:8 !important;
+    grid-column:4 !important;
+  }
+
+  #playerSpellBack{
+    grid-row:8 !important;
+    grid-column:5 !important;
+  }
+
+  #playerDeckPile{
+    grid-row:9 !important;
+    grid-column:2 !important;
+  }
+
+  #playerDiscardPile{
+    grid-row:9 !important;
+    grid-column:4 !important;
+  }
+
+  .vertical-status-rail{
+    left:calc(100% + 3px) !important;
+    width:54px !important;
+    gap:3px !important;
+    transform:translateY(-50%) !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    width:54px !important;
+    min-width:54px !important;
+    max-width:54px !important;
+    height:32px !important;
+    min-height:32px !important;
+    padding:0 4px 0 22px !important;
+    border-radius:10px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge strong,
+  .vertical-status-rail > .enemy-energy-panel strong,
+  .vertical-status-rail > .energy-panel strong{
+    font-size:14px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge::before,
+  .vertical-status-rail > .enemy-energy-panel::before,
+  .vertical-status-rail > .energy-panel::before{
+    left:7px !important;
+    font-size:14px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    width:54px !important;
+    min-width:54px !important;
+    margin:0 !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    width:54px !important;
+    height:54px !important;
+    min-width:54px !important;
+    min-height:54px !important;
+  }
+
+  .vertical-status-rail .end-turn > span{
+    font-size:9px !important;
+    line-height:.92 !important;
+  }
+
+  .vertical-status-rail .end-turn > small{
+    bottom:7px !important;
+    font-size:8px !important;
+  }
+
+  .vertical-status-rail .timer-ring{
+    inset:-4px !important;
+    width:62px !important;
+    height:62px !important;
+  }
+
+  .phase-status-rail{
+    right:calc(100% + 3px) !important;
+    width:34px !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    min-width:34px !important;
+    width:34px !important;
+    padding:7px 4px !important;
+    font-size:9px !important;
+    letter-spacing:.04em !important;
+  }
+}
+
+@media(orientation:portrait) and (max-width:430px){
+  .board{
+    --board-responsive-scale:.84;
+  }
+}
+
+@media(orientation:portrait) and (max-height:760px){
+  .board{
+    --board-responsive-scale:.78;
+  }
+}
+
+/* Portrait pile size correction:
+   Deck/Discard are landscape cards with creature-slot scale, independent from column width. */
+@media(orientation:portrait), (max-width:760px){
+  #enemyDeckPile,
+  #enemyDiscardPile,
+  #playerDeckPile,
+  #playerDiscardPile{
+    width:104px !important;
+    min-width:104px !important;
+    max-width:104px !important;
+    height:82px !important;
+    min-height:82px !important;
+    max-height:82px !important;
+    aspect-ratio:4 / 3 !important;
+    z-index:7 !important;
+  }
+
+  #enemyDeckPile::before,
+  #enemyDeckPile::after,
+  #enemyDiscardPile::before,
+  #enemyDiscardPile::after,
+  #playerDeckPile::before,
+  #playerDeckPile::after,
+  #playerDiscardPile::before,
+  #playerDiscardPile::after,
+  #enemyDeckPile > .pile-card,
+  #enemyDiscardPile > .pile-card,
+  #playerDeckPile > .pile-card,
+  #playerDiscardPile > .pile-card{
+    width:92px !important;
+    min-width:92px !important;
+    max-width:92px !important;
+    height:66px !important;
+    min-height:66px !important;
+    max-height:66px !important;
+    border-radius:11px !important;
+  }
+
+  #enemyDeckPile::before,
+  #enemyDiscardPile::before,
+  #playerDeckPile::before,
+  #playerDiscardPile::before{
+    transform:translate(calc(-50% + 7px),calc(-50% - 7px)) rotate(2.5deg) !important;
+  }
+
+  #enemyDeckPile::after,
+  #enemyDiscardPile::after,
+  #playerDeckPile::after,
+  #playerDiscardPile::after{
+    transform:translate(calc(-50% + 3px),calc(-50% - 3px)) rotate(-1.5deg) !important;
+  }
+
+  #enemyDeckPile > strong,
+  #enemyDiscardPile > strong,
+  #playerDeckPile > strong,
+  #playerDiscardPile > strong{
+    min-width:26px !important;
+    padding:3px 7px !important;
+    font-size:13px !important;
+  }
+}
+
+/* Portrait rail safety:
+   dock side controls inside the board and turn End Turn into a half-circle tab. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    left:auto !important;
+    right:-1px !important;
+    width:42px !important;
+    gap:3px !important;
+    align-items:flex-end !important;
+    transform:translateY(-50%) !important;
+    z-index:170 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    width:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+    height:28px !important;
+    min-height:28px !important;
+    padding:0 3px 0 18px !important;
+    border-radius:14px 0 0 14px !important;
+    border-right:0 !important;
+    box-shadow:
+      0 5px 12px rgba(0,0,0,.35),
+      inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge strong,
+  .vertical-status-rail > .enemy-energy-panel strong,
+  .vertical-status-rail > .energy-panel strong{
+    font-size:12px !important;
+    text-align:center !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge::before,
+  .vertical-status-rail > .enemy-energy-panel::before,
+  .vertical-status-rail > .energy-panel::before{
+    left:5px !important;
+    font-size:12px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    width:42px !important;
+    min-width:42px !important;
+    align-items:flex-end !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    width:42px !important;
+    min-width:42px !important;
+    height:66px !important;
+    min-height:66px !important;
+    border-radius:34px 0 0 34px !important;
+    overflow:hidden !important;
+    border:1px solid rgba(255,255,255,.22) !important;
+    border-right:0 !important;
+  }
+
+  .vertical-status-rail .timer-ring{
+    left:-6px !important;
+    top:-2px !important;
+    inset:auto !important;
+    width:70px !important;
+    height:70px !important;
+  }
+
+  .vertical-status-rail .end-turn > span{
+    left:4px !important;
+    right:auto !important;
+    width:33px !important;
+    font-size:8px !important;
+    line-height:.9 !important;
+  }
+
+  .vertical-status-rail .end-turn > small{
+    left:4px !important;
+    right:auto !important;
+    bottom:8px !important;
+    width:32px !important;
+    font-size:7px !important;
+  }
+
+  .vertical-status-rail .timer-status{
+    display:none !important;
+  }
+
+  .phase-status-rail{
+    left:-1px !important;
+    right:auto !important;
+    width:30px !important;
+    z-index:170 !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    width:30px !important;
+    min-width:30px !important;
+    border-radius:0 12px 12px 0 !important;
+    border-left:0 !important;
+    padding:6px 3px !important;
+    font-size:8px !important;
+  }
+}
+
+/* Portrait rail correction:
+   Keep controls outside the board container and preserve the timer SVG ring. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    position:fixed !important;
+    left:auto !important;
+    right:4px !important;
+    top:50% !important;
+    bottom:auto !important;
+    width:48px !important;
+    gap:4px !important;
+    align-items:center !important;
+    transform:translateY(-50%) !important;
+    z-index:7000 !important;
+    pointer-events:none !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    width:48px !important;
+    min-width:48px !important;
+    max-width:48px !important;
+    height:30px !important;
+    min-height:30px !important;
+    padding:0 4px 0 19px !important;
+    border-radius:12px !important;
+    border-right:1px solid rgba(255,255,255,.15) !important;
+    pointer-events:auto !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge strong,
+  .vertical-status-rail > .enemy-energy-panel strong,
+  .vertical-status-rail > .energy-panel strong{
+    font-size:12px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge::before,
+  .vertical-status-rail > .enemy-energy-panel::before,
+  .vertical-status-rail > .energy-panel::before{
+    left:6px !important;
+    font-size:12px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    width:58px !important;
+    min-width:58px !important;
+    margin:1px 0 !important;
+    align-items:center !important;
+    pointer-events:auto !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    width:58px !important;
+    min-width:58px !important;
+    height:58px !important;
+    min-height:58px !important;
+    border-radius:50% !important;
+    overflow:visible !important;
+    border:0 !important;
+  }
+
+  .vertical-status-rail .timer-ring{
+    position:absolute !important;
+    inset:-5px !important;
+    left:-5px !important;
+    top:-5px !important;
+    width:68px !important;
+    height:68px !important;
+    transform:rotate(-90deg) !important;
+  }
+
+  .vertical-status-rail .end-turn > span{
+    left:50% !important;
+    right:auto !important;
+    top:50% !important;
+    width:auto !important;
+    transform:translate(-50%,-56%) !important;
+    font-size:8px !important;
+    line-height:.9 !important;
+  }
+
+  .vertical-status-rail .end-turn > small{
+    left:50% !important;
+    right:auto !important;
+    bottom:7px !important;
+    width:auto !important;
+    transform:translateX(-50%) !important;
+    font-size:7px !important;
+  }
+
+  .vertical-status-rail .timer-status{
+    display:none !important;
+  }
+
+  .phase-status-rail{
+    position:fixed !important;
+    left:4px !important;
+    right:auto !important;
+    top:50% !important;
+    width:32px !important;
+    transform:translateY(-50%) !important;
+    z-index:7000 !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    width:32px !important;
+    min-width:32px !important;
+    border-radius:12px !important;
+    border-left:1px solid rgba(255,255,255,.15) !important;
+    padding:6px 3px !important;
+    font-size:8px !important;
+  }
+}
+
+/* Portrait edge docking correction:
+   controls belong to the screen edge, not the board edge. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    right:0 !important;
+    left:auto !important;
+    align-items:flex-end !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    border-radius:12px 0 0 12px !important;
+    border-right:0 !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    align-items:flex-end !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    border-radius:30px 0 0 30px !important;
+    border-right:0 !important;
+  }
+
+  .phase-status-rail{
+    left:0 !important;
+    right:auto !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    border-radius:0 12px 12px 0 !important;
+    border-left:0 !important;
+  }
+}
+
+/* Absolute last mobile rail override: screen edges, full-circle End Turn, justified spacing. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    position:fixed !important;
+    left:auto !important;
+    right:0 !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:58px !important;
+    transform:none !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-end !important;
+    justify-content:center !important;
+    gap:clamp(6px,1.2dvh,11px) !important;
+    z-index:9000 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    width:48px !important;
+    min-width:48px !important;
+    max-width:48px !important;
+    height:32px !important;
+    min-height:32px !important;
+    padding:0 4px 0 20px !important;
+    border-radius:12px 0 0 12px !important;
+    border-right:0 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge strong,
+  .vertical-status-rail > .enemy-energy-panel strong,
+  .vertical-status-rail > .energy-panel strong{
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge::before,
+  .vertical-status-rail > .enemy-energy-panel::before,
+  .vertical-status-rail > .energy-panel::before{
+    left:6px !important;
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    width:58px !important;
+    min-width:58px !important;
+    margin:0 !important;
+    align-items:center !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    width:58px !important;
+    min-width:58px !important;
+    height:58px !important;
+    min-height:58px !important;
+    border-radius:50% !important;
+    overflow:visible !important;
+    border-right:1px solid rgba(255,255,255,.22) !important;
+  }
+
+  .vertical-status-rail .timer-ring{
+    inset:-4px !important;
+    width:66px !important;
+    height:66px !important;
+  }
+
+  .phase-status-rail{
+    position:fixed !important;
+    left:0 !important;
+    right:auto !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:34px !important;
+    transform:none !important;
+    display:flex !important;
+    align-items:stretch !important;
+    justify-content:center !important;
+    z-index:9000 !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    width:34px !important;
+    min-width:34px !important;
+    height:100% !important;
+    min-height:0 !important;
+    padding:0 3px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    writing-mode:vertical-rl !important;
+    text-orientation:upright !important;
+    white-space:nowrap !important;
+    line-height:1 !important;
+    font-size:clamp(9px,1.45dvh,13px) !important;
+    letter-spacing:clamp(4px,1.15dvh,10px) !important;
+    border-radius:0 !important;
+    border-left:0 !important;
+  }
+}
+
+/* Final non-board card ratio: match the detail viewer's 3:4 proportion. */
+.enemy-hand-card,
+.hand .card,
+.discard-view-card{
+  aspect-ratio:var(--card-aspect-ratio,3 / 4) !important;
+}
+
+.enemy-hand-card,
+.hand .card{
+  height:var(--edge-card-height) !important;
+  min-height:var(--edge-card-height) !important;
+  max-height:var(--edge-card-height) !important;
+}
+
+.discard-view-card{
+  height:auto !important;
+}
+
+/* Detail viewer artwork uses the same full-card illustration treatment as Collection. */
+.inspect-card .inspect-card-art{
+  inset:0 !important;
+  border-radius:25px !important;
+  clip-path:inset(0 round 25px) !important;
+  -webkit-clip-path:inset(0 round 25px) !important;
+}
+
+.inspect-card .inspect-card-art img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  border-radius:25px !important;
+}
+
+/* Tutorial hand-card focus: keep the instructed card visible above the dim overlay. */
+body.tutorial-active .hand-panel.tutorial-hand-focus{
+  z-index:10020 !important;
+}
+
+body.tutorial-active .hand.tutorial-hand-focus .card:not(.tutorial-highlight){
+  filter:brightness(.42) saturate(.72) !important;
+  opacity:.72 !important;
+}
+
+body.tutorial-active .hand .card.tutorial-highlight{
+  z-index:13010 !important;
+  outline:3px solid rgba(255,64,64,.98) !important;
+  outline-offset:5px !important;
+  filter:brightness(1.24) saturate(1.08) !important;
+  box-shadow:
+    0 0 0 8px rgba(255,64,64,.22),
+    0 0 38px rgba(255,64,64,.86),
+    0 28px 58px rgba(0,0,0,.68) !important;
+}
+
+body.tutorial-active .hand .card.tutorial-highlight:hover,
+body.tutorial-active .hand .card.tutorial-highlight.hand-selected,
+body.tutorial-active .hand .card.tutorial-highlight:focus-visible{
+  filter:brightness(1.28) saturate(1.08) !important;
+}
+
+body.tutorial-active .hand .card.tutorial-action-highlight{
+  animation:tutorialHandCardBlink .58s ease-in-out infinite alternate !important;
+}
+
+@keyframes tutorialHandCardBlink{
+  from{
+    filter:brightness(1.12) saturate(1.04);
+  }
+  to{
+    filter:brightness(1.45) saturate(1.16);
+  }
+}
+
+.inspect-card .inspect-card-art::after{
+  inset:0 !important;
+  background:linear-gradient(
+    180deg,
+    rgba(0,0,0,.02) 0,
+    rgba(0,0,0,.12) 42%,
+    rgba(0,0,0,.78) 82%,
+    rgba(0,0,0,.94) 100%
+  ) !important;
+}
+
+.inspect-card .inspect-card-body{
+  background:linear-gradient(
+    180deg,
+    transparent,
+    rgba(8,12,24,.74) 18%,
+    rgba(8,12,24,.96) 100%
+  ) !important;
+}
+
+/* Last mobile rail override: screen edges, full-circle End Turn, justified spacing. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    position:fixed !important;
+    left:auto !important;
+    right:0 !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:58px !important;
+    transform:none !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-end !important;
+    justify-content:center !important;
+    gap:clamp(6px,1.2dvh,11px) !important;
+    z-index:9000 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    width:48px !important;
+    min-width:48px !important;
+    max-width:48px !important;
+    height:32px !important;
+    min-height:32px !important;
+    padding:0 4px 0 20px !important;
+    border-radius:12px 0 0 12px !important;
+    border-right:0 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge strong,
+  .vertical-status-rail > .enemy-energy-panel strong,
+  .vertical-status-rail > .energy-panel strong{
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge::before,
+  .vertical-status-rail > .enemy-energy-panel::before,
+  .vertical-status-rail > .energy-panel::before{
+    left:6px !important;
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    width:58px !important;
+    min-width:58px !important;
+    margin:0 !important;
+    align-items:center !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    width:58px !important;
+    min-width:58px !important;
+    height:58px !important;
+    min-height:58px !important;
+    border-radius:50% !important;
+    overflow:visible !important;
+    border-right:1px solid rgba(255,255,255,.22) !important;
+  }
+
+  .vertical-status-rail .timer-ring{
+    inset:-4px !important;
+    width:66px !important;
+    height:66px !important;
+  }
+
+  .phase-status-rail{
+    position:fixed !important;
+    left:0 !important;
+    right:auto !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:34px !important;
+    transform:none !important;
+    display:flex !important;
+    align-items:stretch !important;
+    justify-content:center !important;
+    z-index:9000 !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    width:34px !important;
+    min-width:34px !important;
+    height:100% !important;
+    min-height:0 !important;
+    padding:0 3px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    writing-mode:vertical-rl !important;
+    text-orientation:upright !important;
+    white-space:nowrap !important;
+    line-height:1 !important;
+    font-size:clamp(9px,1.45dvh,13px) !important;
+    letter-spacing:clamp(4px,1.15dvh,10px) !important;
+    border-radius:0 !important;
+    border-left:0 !important;
+  }
+}
+
+/* Final portrait rail spacing:
+   the rails are viewport UI, with controls justified between both edge hands. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    position:fixed !important;
+    left:auto !important;
+    right:0 !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:58px !important;
+    transform:none !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-end !important;
+    justify-content:space-between !important;
+    gap:0 !important;
+    z-index:9000 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    width:48px !important;
+    min-width:48px !important;
+    max-width:48px !important;
+    height:32px !important;
+    min-height:32px !important;
+    padding:0 4px 0 20px !important;
+    border-radius:12px 0 0 12px !important;
+    border-right:0 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge strong,
+  .vertical-status-rail > .enemy-energy-panel strong,
+  .vertical-status-rail > .energy-panel strong{
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge::before,
+  .vertical-status-rail > .enemy-energy-panel::before,
+  .vertical-status-rail > .energy-panel::before{
+    left:6px !important;
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    width:58px !important;
+    min-width:58px !important;
+    margin:0 !important;
+    align-items:center !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    width:58px !important;
+    min-width:58px !important;
+    height:58px !important;
+    min-height:58px !important;
+    border-radius:50% !important;
+    overflow:visible !important;
+    border-right:1px solid rgba(255,255,255,.22) !important;
+  }
+
+  .vertical-status-rail .timer-ring{
+    inset:-4px !important;
+    width:66px !important;
+    height:66px !important;
+  }
+
+  .phase-status-rail{
+    position:fixed !important;
+    left:0 !important;
+    right:auto !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:34px !important;
+    transform:none !important;
+    display:flex !important;
+    align-items:stretch !important;
+    justify-content:center !important;
+    z-index:9000 !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    width:34px !important;
+    min-width:34px !important;
+    height:100% !important;
+    min-height:0 !important;
+    padding:0 3px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    writing-mode:vertical-rl !important;
+    text-orientation:upright !important;
+    white-space:nowrap !important;
+    line-height:1 !important;
+    font-size:clamp(9px,1.45dvh,13px) !important;
+    letter-spacing:clamp(4px,1.15dvh,10px) !important;
+    border-radius:0 !important;
+    border-left:0 !important;
+  }
+}
+
+/* Portrait board-edge docking:
+   side controls sit on the inner board margins shown by the green guide. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    position:absolute !important;
+    left:auto !important;
+    right:-34px !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:48px !important;
+    align-items:center !important;
+    z-index:180 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    border-radius:12px !important;
+    border-right:1px solid rgba(255,255,255,.15) !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    align-items:center !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    border-radius:50% !important;
+    border-right:0 !important;
+  }
+
+  .phase-status-rail{
+    position:absolute !important;
+    left:-34px !important;
+    right:auto !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:32px !important;
+    z-index:180 !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    border-radius:12px !important;
+    border-left:1px solid rgba(255,255,255,.15) !important;
+  }
+}
+
+/* Final portrait screen-edge docking:
+   controls attach to the viewport edge, with justified spacing. */
+@media(orientation:portrait), (max-width:760px){
+  .vertical-status-rail{
+    position:fixed !important;
+    left:auto !important;
+    right:0 !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:58px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-end !important;
+    justify-content:center !important;
+    gap:clamp(6px,1.2dvh,11px) !important;
+    transform:none !important;
+    z-index:9000 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge,
+  .vertical-status-rail > .enemy-energy-panel,
+  .vertical-status-rail > .energy-panel{
+    width:48px !important;
+    min-width:48px !important;
+    max-width:48px !important;
+    height:32px !important;
+    min-height:32px !important;
+    padding:0 4px 0 20px !important;
+    border-radius:12px 0 0 12px !important;
+    border-right:0 !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge strong,
+  .vertical-status-rail > .enemy-energy-panel strong,
+  .vertical-status-rail > .energy-panel strong{
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .hand-health-badge::before,
+  .vertical-status-rail > .enemy-energy-panel::before,
+  .vertical-status-rail > .energy-panel::before{
+    left:6px !important;
+    font-size:13px !important;
+  }
+
+  .vertical-status-rail > .end-turn-wrap{
+    width:58px !important;
+    min-width:58px !important;
+    margin:0 !important;
+    align-items:center !important;
+  }
+
+  .vertical-status-rail .end-turn{
+    width:58px !important;
+    min-width:58px !important;
+    height:58px !important;
+    min-height:58px !important;
+    border-radius:50% !important;
+    overflow:visible !important;
+    border-right:1px solid rgba(255,255,255,.22) !important;
+  }
+
+  .vertical-status-rail .timer-ring{
+    inset:-4px !important;
+    width:66px !important;
+    height:66px !important;
+  }
+
+  .phase-status-rail{
+    position:fixed !important;
+    left:0 !important;
+    right:auto !important;
+    top:calc(var(--edge-hand-visible) + 16px) !important;
+    bottom:calc(var(--edge-hand-visible) + 16px) !important;
+    height:auto !important;
+    width:34px !important;
+    display:flex !important;
+    align-items:stretch !important;
+    justify-content:center !important;
+    transform:none !important;
+    z-index:9000 !important;
+  }
+
+  .phase-status-rail > .vertical-phase-badge{
+    width:34px !important;
+    min-width:34px !important;
+    height:100% !important;
+    min-height:0 !important;
+    padding:0 3px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    writing-mode:vertical-rl !important;
+    text-orientation:upright !important;
+    white-space:nowrap !important;
+    line-height:1 !important;
+    font-size:clamp(9px,1.45dvh,13px) !important;
+    letter-spacing:clamp(4px,1.15dvh,10px) !important;
+    border-radius:0 !important;
+    border-left:0 !important;
+  }
+}
+
+body.tutorial-active .hand.tutorial-hand-focus .card.tutorial-action-highlight{
+  animation:tutorialHandGlowLast .58s ease-in-out infinite alternate !important;
+}
+
+@keyframes tutorialHandGlowLast{
+  from{
+    filter:brightness(1.12) saturate(1.04);
+  }
+  to{
+    filter:brightness(1.45) saturate(1.16);
+  }
+}
+
+/* =========================================================
+   ACTIVE SPELL SLOT AURAS
+   Persistent spells should visibly keep influencing the board.
+   ========================================================= */
+
+.board .slot.spell-aura-active,
+.board .slot.spell-linked-active{
+  isolation:isolate !important;
+}
+
+.board .slot.spell-aura-active{
+  border-style:solid !important;
+  animation:activeSpellSlotBreath 1.8s ease-in-out infinite !important;
+}
+
+.board .slot.spell-aura-active::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:-7px !important;
+  border-radius:inherit !important;
+  pointer-events:none !important;
+  z-index:3 !important;
+  opacity:.86 !important;
+  background:
+    radial-gradient(circle at 50% 85%,rgba(255,255,255,.18),transparent 32%),
+    linear-gradient(180deg,transparent,rgba(255,255,255,.10),transparent) !important;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0) !important;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0) !important;
+  padding:2px !important;
+  -webkit-mask-composite:xor !important;
+  mask-composite:exclude !important;
+  animation:activeSpellAuraDrift 1.35s linear infinite !important;
+}
+
+.board .slot.spell-aura-active > .card{
+  position:relative !important;
+  z-index:5 !important;
+}
+
+.board .slot.spell-aura-heal{
+  border-color:rgba(100,255,162,.62) !important;
+  box-shadow:
+    0 0 0 1px rgba(100,255,162,.18),
+    0 0 18px rgba(82,255,144,.30),
+    inset 0 0 22px rgba(82,255,144,.12) !important;
+}
+
+.board .slot.spell-aura-heal::after{
+  background:
+    radial-gradient(circle at 30% 80%,rgba(126,255,180,.85) 0 4px,transparent 5px),
+    radial-gradient(circle at 66% 66%,rgba(126,255,180,.50) 0 3px,transparent 4px),
+    linear-gradient(0deg,rgba(72,255,142,.24),transparent 70%) !important;
+}
+
+.board .slot.spell-aura-attack{
+  border-color:rgba(255,179,86,.66) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,179,86,.18),
+    0 0 20px rgba(255,128,55,.31),
+    inset 0 0 20px rgba(255,128,55,.12) !important;
+}
+
+.board .slot.spell-aura-attack::after{
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,206,96,.58) 0 5px,
+      transparent 5px 13px
+    ),
+    radial-gradient(circle at 50% 72%,rgba(255,102,54,.26),transparent 58%) !important;
+}
+
+.board .slot.spell-aura-defense{
+  border-color:rgba(116,204,255,.66) !important;
+  box-shadow:
+    0 0 0 1px rgba(116,204,255,.18),
+    0 0 20px rgba(92,186,255,.30),
+    inset 0 0 22px rgba(92,186,255,.13) !important;
+}
+
+.board .slot.spell-aura-defense::after{
+  background:
+    radial-gradient(circle at 50% 50%,transparent 42%,rgba(116,204,255,.44) 43% 48%,transparent 49%),
+    linear-gradient(180deg,rgba(116,204,255,.20),transparent 72%) !important;
+  animation:activeSpellShieldPulse 1.7s ease-in-out infinite !important;
+}
+
+.board .slot.spell-aura-poison{
+  border-color:rgba(169,119,255,.66) !important;
+  box-shadow:
+    0 0 0 1px rgba(169,119,255,.18),
+    0 0 20px rgba(136,80,255,.31),
+    inset 0 0 22px rgba(90,255,140,.09) !important;
+}
+
+.board .slot.spell-aura-poison::after{
+  background:
+    radial-gradient(circle at 38% 74%,rgba(96,255,145,.36) 0 8px,transparent 9px),
+    radial-gradient(circle at 68% 40%,rgba(169,119,255,.42) 0 11px,transparent 12px),
+    linear-gradient(0deg,rgba(110,255,142,.15),rgba(135,80,255,.20),transparent 78%) !important;
+  filter:blur(.2px) !important;
+  animation:activeSpellMist 2.2s ease-in-out infinite !important;
+}
+
+.board .slot.spell-aura-trap{
+  border-color:rgba(220,225,238,.38) !important;
+  box-shadow:
+    0 0 0 1px rgba(220,225,238,.10),
+    0 0 13px rgba(165,180,205,.18),
+    inset 0 0 18px rgba(220,225,238,.08) !important;
+}
+
+.board .slot.spell-aura-trap::after{
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 12px,
+      rgba(230,235,245,.18) 12px 14px,
+      transparent 14px 26px
+    ) !important;
+  opacity:.52 !important;
+  animation:activeTrapShimmer 2.4s linear infinite !important;
+}
+
+.board .slot.spell-aura-column::after{
+  inset:-20px -5px !important;
+  border-radius:18px !important;
+}
+
+.board .slot.spell-linked-active{
+  outline:1px solid rgba(120,200,255,.20) !important;
+  outline-offset:2px !important;
+  animation:linkedSpellSlotPulse 2.15s ease-in-out infinite !important;
+}
+
+.board .slot.spell-linked-active:not(.spell-aura-active)::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:5px !important;
+  border-radius:12px !important;
+  pointer-events:none !important;
+  z-index:2 !important;
+  opacity:.42 !important;
+  background:radial-gradient(circle at 50% 50%,rgba(120,200,255,.20),transparent 66%) !important;
+}
+
+.board .slot.spell-linked-heal{
+  outline-color:rgba(100,255,162,.26) !important;
+}
+
+.board .slot.spell-linked-attack{
+  outline-color:rgba(255,179,86,.26) !important;
+}
+
+.board .slot.spell-linked-defense,
+.board .slot.spell-linked-shared{
+  outline-color:rgba(116,204,255,.26) !important;
+}
+
+.board .slot.spell-linked-poison{
+  outline-color:rgba(169,119,255,.28) !important;
+}
+
+.board .slot.spell-linked-active > .card{
+  filter:
+    brightness(1.04)
+    drop-shadow(0 0 7px rgba(120,200,255,.14)) !important;
+}
+
+@keyframes activeSpellSlotBreath{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-1px)}
+}
+
+@keyframes activeSpellAuraDrift{
+  0%{background-position:0 12px,0 0}
+  100%{background-position:0 -12px,0 0}
+}
+
+@keyframes activeSpellShieldPulse{
+  0%,100%{opacity:.54;transform:scale(.97)}
+  50%{opacity:.9;transform:scale(1.04)}
+}
+
+@keyframes activeSpellMist{
+  0%,100%{opacity:.46;transform:translateY(3px) scale(.96)}
+  50%{opacity:.86;transform:translateY(-4px) scale(1.04)}
+}
+
+@keyframes activeTrapShimmer{
+  from{background-position:-36px 0}
+  to{background-position:36px 0}
+}
+
+@keyframes linkedSpellSlotPulse{
+  0%,100%{
+    box-shadow:inset 0 0 0 rgba(120,200,255,0);
+  }
+  50%{
+    box-shadow:inset 0 0 16px rgba(120,200,255,.08);
+  }
+}
+
+/* =========================================================
+   HAND HP INSIDE HAND PANELS
+   HP sits at the far-left of each hand and cards start after it.
+   ========================================================= */
+
+.enemy-hand-panel,
+.hand-panel{
+  --hand-hp-left:10px;
+  --hand-hp-width:86px;
+  --hand-card-safe-left:124px;
+}
+
+.enemy-hand-panel > .hand-health-badge,
+.hand-panel > .hand-health-badge{
+  --health-level:100%;
+  --health-fill:rgba(72,218,116,.78);
+  --health-fill-dark:rgba(28,126,71,.82);
+  --health-text:rgba(205,255,216,.98);
+  position:absolute !important;
+  left:var(--hand-hp-left) !important;
+  right:auto !important;
+  top:50% !important;
+  bottom:auto !important;
+  transform:translateY(-50%) !important;
+  z-index:40 !important;
+  width:var(--hand-hp-width) !important;
+  min-width:var(--hand-hp-width) !important;
+  height:50px !important;
+  min-height:50px !important;
+  padding:6px 10px 6px 34px !important;
+  pointer-events:none !important;
+  overflow:hidden !important;
+  color:var(--health-text) !important;
+  border-color:rgba(190,255,206,.24) !important;
+  background:
+    linear-gradient(145deg,rgba(8,16,24,.93),rgba(4,8,14,.96)) !important;
+}
+
+.enemy-hand-panel > .hand-health-badge::before,
+.hand-panel > .hand-health-badge::before{
+  left:11px !important;
+  z-index:3 !important;
+  color:var(--health-text) !important;
+  text-shadow:0 0 9px var(--health-fill) !important;
+}
+
+.enemy-hand-panel > .hand-health-badge::after,
+.hand-panel > .hand-health-badge::after{
+  content:"" !important;
+  position:absolute !important;
+  left:-18% !important;
+  right:-18% !important;
+  bottom:0 !important;
+  height:var(--health-level) !important;
+  min-height:5px !important;
+  z-index:1 !important;
+  border-radius:48% 52% 0 0 / 16px 16px 0 0 !important;
+  background:
+    radial-gradient(ellipse at 22% 0%,rgba(255,255,255,.48) 0 7%,transparent 8%),
+    radial-gradient(ellipse at 62% 4%,rgba(255,255,255,.25) 0 9%,transparent 10%),
+    linear-gradient(180deg,var(--health-fill),var(--health-fill-dark)) !important;
+  box-shadow:
+    0 -6px 16px color-mix(in srgb,var(--health-fill) 54%,transparent),
+    inset 0 8px 12px rgba(255,255,255,.12) !important;
+  transform:translateX(-6%) !important;
+  animation:healthTankWave 2.1s ease-in-out infinite !important;
+}
+
+.enemy-hand-panel > .hand-health-badge span,
+.hand-panel > .hand-health-badge span,
+.enemy-hand-panel > .hand-health-badge strong,
+.hand-panel > .hand-health-badge strong,
+.enemy-hand-panel > .hand-health-badge #enemyHandHp,
+.hand-panel > .hand-health-badge #playerHandHp{
+  position:relative !important;
+  z-index:4 !important;
+  color:var(--health-text) !important;
+  -webkit-text-fill-color:var(--health-text) !important;
+  text-shadow:
+    0 2px 2px rgba(0,0,0,.82),
+    0 0 10px var(--health-fill) !important;
+}
+
+.enemy-hand-panel > .hand-health-badge[data-health-state="mid"],
+.hand-panel > .hand-health-badge[data-health-state="mid"]{
+  border-color:rgba(255,201,86,.28) !important;
+}
+
+.enemy-hand-panel > .hand-health-badge[data-health-state="low"],
+.hand-panel > .hand-health-badge[data-health-state="low"]{
+  border-color:rgba(255,85,96,.34) !important;
+  animation:healthTankCritical 1.15s ease-in-out infinite !important;
+}
+
+.enemy-hand,
+.hand{
+  justify-content:flex-start !important;
+  padding-left:var(--hand-card-safe-left) !important;
+  padding-right:28px !important;
+}
+
+.enemy-hand-card:first-child,
+.hand .card:first-child{
+  margin-left:0 !important;
+}
+
+@media(max-width:760px){
+  .enemy-hand-panel,
+  .hand-panel{
+    --hand-hp-left:7px;
+    --hand-hp-width:74px;
+    --hand-card-safe-left:104px;
+  }
+
+  .enemy-hand-panel > .hand-health-badge,
+  .hand-panel > .hand-health-badge{
+    height:44px !important;
+    min-height:44px !important;
+    padding-left:31px !important;
+    padding-right:7px !important;
+  }
+
+  .enemy-hand,
+  .hand{
+    padding-right:16px !important;
+  }
+}
+
+@keyframes healthTankWave{
+  0%,100%{
+    transform:translateX(-6%) translateY(0) skewX(-4deg);
+    border-radius:48% 52% 0 0 / 16px 14px 0 0;
+  }
+  50%{
+    transform:translateX(6%) translateY(-2px) skewX(4deg);
+    border-radius:54% 46% 0 0 / 12px 17px 0 0;
+  }
+}
+
+@keyframes healthTankCritical{
+  0%,100%{
+    box-shadow:
+      0 8px 20px rgba(0,0,0,.34),
+      inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  50%{
+    box-shadow:
+      0 8px 20px rgba(0,0,0,.34),
+      0 0 18px rgba(255,54,72,.20),
+      inset 0 1px 0 rgba(255,255,255,.08);
+  }
+}
+
+/* Real moving liquid layer for Health tanks. */
+.enemy-hand-panel > .hand-health-badge::after,
+.hand-panel > .hand-health-badge::after{
+  content:none !important;
+  display:none !important;
+}
+
+.hand-health-badge .health-liquid{
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  height:var(--health-level) !important;
+  min-height:5px !important;
+  z-index:1 !important;
+  overflow:visible !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(180deg,var(--health-fill),var(--health-fill-dark)) !important;
+  box-shadow:
+    0 -8px 18px rgba(255,255,255,.08),
+    inset 0 10px 14px rgba(255,255,255,.12),
+    inset 0 -10px 14px rgba(0,0,0,.18) !important;
+  transition:
+    height .38s cubic-bezier(.2,.8,.2,1),
+    background .22s ease !important;
+  animation:healthLiquidBreathe 1.9s ease-in-out infinite !important;
+}
+
+.hand-health-badge .health-wave{
+  position:absolute !important;
+  left:-46% !important;
+  top:-13px !important;
+  width:192% !important;
+  height:24px !important;
+  display:block !important;
+  border-radius:50% !important;
+  background:
+    radial-gradient(ellipse at 12% 58%,var(--health-fill) 0 18px,transparent 19px),
+    radial-gradient(ellipse at 36% 48%,var(--health-fill) 0 17px,transparent 18px),
+    radial-gradient(ellipse at 61% 58%,var(--health-fill) 0 19px,transparent 20px),
+    radial-gradient(ellipse at 86% 50%,var(--health-fill) 0 17px,transparent 18px) !important;
+  filter:brightness(1.16) saturate(1.12) !important;
+  opacity:.95 !important;
+  transform:translateX(0) !important;
+  animation:healthWaveTravel 1.35s linear infinite !important;
+}
+
+.hand-health-badge .health-wave-b{
+  top:-10px !important;
+  opacity:.55 !important;
+  filter:brightness(.95) saturate(1.08) blur(.2px) !important;
+  animation:
+    healthWaveTravelReverse 1.85s linear infinite,
+    healthWaveBob .95s ease-in-out infinite !important;
+}
+
+.hand-health-badge .health-shine{
+  position:absolute !important;
+  left:8px !important;
+  right:8px !important;
+  top:4px !important;
+  height:42% !important;
+  display:block !important;
+  border-radius:999px !important;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.24),
+      rgba(255,255,255,.05),
+      transparent
+    ) !important;
+  opacity:.55 !important;
+  animation:healthLiquidShine 2.4s ease-in-out infinite !important;
+}
+
+.hand-health-badge[data-health-state="low"] .health-wave{
+  animation-duration:.92s !important;
+}
+
+.hand-health-badge[data-health-state="low"] .health-wave-b{
+  animation-duration:1.18s,.72s !important;
+}
+
+@keyframes healthWaveTravel{
+  from{transform:translateX(0)}
+  to{transform:translateX(24%)}
+}
+
+@keyframes healthWaveTravelReverse{
+  from{transform:translateX(24%)}
+  to{transform:translateX(0)}
+}
+
+@keyframes healthWaveBob{
+  0%,100%{top:-10px}
+  50%{top:-15px}
+}
+
+@keyframes healthLiquidBreathe{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.12)}
+}
+
+@keyframes healthLiquidShine{
+  0%,100%{opacity:.38;transform:translateX(-8px)}
+  50%{opacity:.68;transform:translateX(8px)}
+}
+
+/* =========================================================
+   RESPONSIVE HAND CARD SPACING
+   JS updates --hand-card-gap from hand width and card count.
+   ========================================================= */
+
+.enemy-hand,
+.hand{
+  --hand-card-gap:-34px;
+}
+
+.enemy-hand-card,
+.hand .card{
+  margin-left:var(--hand-card-gap) !important;
+  transition:
+    margin-left .18s ease,
+    transform .2s cubic-bezier(.2,.78,.2,1),
+    filter .2s ease,
+    box-shadow .2s ease !important;
+}
+
+.enemy-hand-card:first-child,
+.hand .card:first-child{
+  margin-left:0 !important;
+}
+
+.enemy-hand.hand-spread-roomy,
+.hand.hand-spread-roomy{
+  justify-content:space-evenly !important;
+}
+
+.enemy-hand.hand-spread-tight,
+.hand.hand-spread-tight{
+  justify-content:flex-start !important;
+}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCG Duel Prototype v53 — Modular</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/card-viewer.css" />
+  <link rel="stylesheet" href="css/deck-builder.css" />
+  <link rel="stylesheet" href="css/board-spacing.css" />
+  <link rel="stylesheet" href="css/battlefield-overlay.css" />
+  <link rel="stylesheet" href="css/card-back.css" />
+</head>
+<body>
+  <main class="game-shell" id="gameShell">
+    <section class="battlefield">
+      <aside class="hero-side enemy-side">
+        <button class="hero enemy" id="enemyHero" type="button" aria-label="Enemy hero">
+          <span class="hero-title">Enemy Hero</span>
+          <strong class="hero-hp" id="enemyHp">25</strong>
+          <span class="hero-sub">HP</span>
+        </button>
+      </aside>
+
+      <section class="board" aria-label="Card battlefield">
+        <div class="board-grid">
+          <div class="slot spell-slot" id="enemySpellBack" data-row="enemySpellBack" data-lane="0" aria-label="Enemy back spell slot"></div>
+          <div class="slot creature-slot" id="enemyBack_0" data-row="enemyBack" data-lane="0" aria-label="Enemy back lane 1"></div>
+          <div class="slot creature-slot" id="enemyBack_1" data-row="enemyBack" data-lane="1" aria-label="Enemy back lane 2"></div>
+          <div class="slot creature-slot" id="enemyBack_2" data-row="enemyBack" data-lane="2" aria-label="Enemy back lane 3"></div>
+          <div class="pile deck-pile" id="enemyDeckPile" aria-label="Enemy deck">
+            <div class="pile-card"></div><strong id="enemyDeckCount">0</strong><span>Deck</span>
+          </div>
+
+          <div class="slot spell-slot" id="enemySpellFront" data-row="enemySpellFront" data-lane="0" aria-label="Enemy front spell slot"></div>
+          <div class="slot creature-slot" id="enemyFront_0" data-row="enemyFront" data-lane="0" aria-label="Enemy front lane 1"></div>
+          <div class="slot creature-slot" id="enemyFront_1" data-row="enemyFront" data-lane="1" aria-label="Enemy front lane 2"></div>
+          <div class="slot creature-slot" id="enemyFront_2" data-row="enemyFront" data-lane="2" aria-label="Enemy front lane 3"></div>
+          <div class="pile discard-pile" id="enemyDiscardPile" aria-label="Enemy discard">
+            <div class="pile-card"></div><strong id="enemyDiscardCount">0</strong><span>Discard</span>
+          </div>
+
+          <div class="arena-divider enemy-divider"></div>
+
+          <div class="shared-gap"></div>
+          <div class="slot spell-slot shared-slot" id="sharedSpell_0" data-row="sharedSpell" data-lane="0" aria-label="Shared spell lane 1"></div>
+          <div class="slot spell-slot shared-slot" id="sharedSpell_1" data-row="sharedSpell" data-lane="1" aria-label="Shared spell lane 2"></div>
+          <div class="slot spell-slot shared-slot" id="sharedSpell_2" data-row="sharedSpell" data-lane="2" aria-label="Shared spell lane 3"></div>
+          <div class="shared-gap"></div>
+
+          <div class="arena-divider player-divider"></div>
+
+          <div class="pile deck-pile" id="playerDeckPile" aria-label="Player deck">
+            <div class="pile-card"></div><strong id="playerDeckCount">0</strong><span>Deck</span>
+          </div>
+          <div class="slot creature-slot" id="playerFront_0" data-row="playerFront" data-lane="0" aria-label="Player front lane 1"></div>
+          <div class="slot creature-slot" id="playerFront_1" data-row="playerFront" data-lane="1" aria-label="Player front lane 2"></div>
+          <div class="slot creature-slot" id="playerFront_2" data-row="playerFront" data-lane="2" aria-label="Player front lane 3"></div>
+          <div class="slot spell-slot player-spell-slot" id="playerSpellFront" data-row="playerSpellFront" data-lane="0" aria-label="Player front spell slot"></div>
+
+          <div class="pile discard-pile" id="playerDiscardPile" aria-label="Player discard">
+            <div class="pile-card"></div><strong id="playerDiscardCount">0</strong><span>Discard</span>
+          </div>
+          <div class="slot creature-slot" id="playerBack_0" data-row="playerBack" data-lane="0" aria-label="Player back lane 1"></div>
+          <div class="slot creature-slot" id="playerBack_1" data-row="playerBack" data-lane="1" aria-label="Player back lane 2"></div>
+          <div class="slot creature-slot" id="playerBack_2" data-row="playerBack" data-lane="2" aria-label="Player back lane 3"></div>
+          <div class="slot spell-slot player-spell-slot" id="playerSpellBack" data-row="playerSpellBack" data-lane="0" aria-label="Player back spell slot"></div>
+        </div>
+      </section>
+
+      <aside class="hero-side player-side">
+        <button class="hero player" id="playerHero" type="button" aria-label="Player hero">
+          <span class="hero-title">Player Hero</span>
+          <strong class="hero-hp" id="playerHp">25</strong>
+          <span class="hero-sub">HP</span>
+        </button>
+      </aside>
+    </section>
+
+    <section class="bottom-ui">
+      <aside class="energy-panel">
+        <span>Energy</span>
+        <strong><b id="energy">1</b>/<b id="maxEnergy">1</b></strong>
+        <small>Hand <b id="handCount">0</b></small>
+      </aside>
+
+      <section class="hand-panel">
+        <div class="hand" id="hand" aria-label="Player hand"></div>
+        <div class="end-turn-wrap">
+          <button class="end-turn" id="endBtn" type="button">
+            <svg class="timer-ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="timer-track" cx="60" cy="60" r="53"></circle>
+              <circle class="timer-progress" id="timerProgress" cx="60" cy="60" r="53"></circle>
+            </svg>
+            <span>END<br />TURN</span>
+            <small id="timerText">60s</small>
+          </button>
+          <div class="timer-status" id="timerStatus">Player action</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <section class="main-menu-overlay" id="mainMenu" aria-labelledby="mainMenuTitle" hidden>
+    <div class="main-menu-card">
+      <span class="main-menu-kicker">TCG Duel Prototype</span>
+      <h1 id="mainMenuTitle">Battle Deck</h1>
+      <p>Bangun tempo, mainkan creature, kendalikan row spell, dan hancurkan HP musuh.</p>
+      <div class="main-menu-active-deck" id="mainMenuActiveDeck">Deck: Starter Deck</div>
+
+      <div class="main-menu-actions">
+        <div class="main-menu-action-group main-menu-primary-group">
+          <button class="main-menu-play" id="mainMenuPlay" type="button">VERSUS AI</button>
+        </div>
+        <div class="main-menu-action-group main-menu-manage-group">
+          <button id="mainMenuDecks" type="button">Decks</button>
+          <button id="mainMenuCollection" type="button">Collection</button>
+        </div>
+        <div class="main-menu-action-group main-menu-learn-group">
+          <button id="mainMenuGuide" type="button">Guide</button>
+          <button id="mainMenuTutorial" type="button">Tutorial Guide</button>
+        </div>
+        <div class="main-menu-footer">
+          <button class="main-menu-about" id="mainMenuAbout" type="button">About</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="collection-overlay about-overlay" id="aboutOverlay" aria-labelledby="aboutTitle" hidden>
+    <div class="collection-shell about-shell">
+      <header class="collection-head about-head">
+        <button class="menu-back-btn" id="aboutBackBtn" type="button" aria-label="Back to main menu">Back</button>
+        <div>
+          <span class="collection-kicker">About</span>
+          <h1 id="aboutTitle">Battle Deck</h1>
+        </div>
+        <span class="about-head-spacer" aria-hidden="true"></span>
+      </header>
+      <div class="about-body">
+        <p>
+          Battle Deck adalah prototype TCG digital buatan Sunsunmon.
+          Versi ini masih dalam tahap eksplorasi mekanik, balancing, UI, campaign,
+          dan feel combat.
+        </p>
+        <p>
+          Beberapa angka, efek kartu, stage AI, sound, dan visual masih bisa berubah
+          sampai alur permainannya terasa lebih rapi, fair, dan enak dimainkan.
+        </p>
+        <strong>Prototype build. Made by Sunsunmon.</strong>
+      </div>
+    </div>
+  </section>
+
+  <aside class="utility-panel" id="utilityPanel">
+    <div class="gameplay-menu-title">Menu</div>
+    <button class="surrender-btn" id="surrenderBtn" type="button">Surrender</button>
+    <button class="quit-tutorial-btn" id="quitTutorialBtn" type="button">Quit Tutorial</button>
+  </aside>
+  <button class="panel-open" id="panelOpen" type="button" aria-label="Open gameplay menu">☰</button>
+
+  <div class="phase-badge phase-badge-hidden" id="phaseText">Player Phase</div>
+  <div class="turn-badge" id="turnText" hidden aria-hidden="true">Turn 1</div>
+  <div class="mode-hint mode-hint-hidden" id="modeHint">Ready</div>
+  <div class="battle-log battle-log-hidden" id="log" aria-live="polite"></div>
+
+  <div class="phase-banner" id="banner"><span id="bannerText">Player Phase</span></div>
+  <div class="fx-layer" id="fx"></div>
+
+  <svg class="target-line-svg" id="targetLineSvg" aria-hidden="true">
+    <defs>
+      <marker id="targetArrow" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L12,5 L0,10 Z" class="target-arrow-head"></path>
+      </marker>
+    </defs>
+    <path id="targetLine" d=""></path>
+  </svg>
+
+  <script src="js/data/cards.js"></script>
+  <script src="js/systems/deck-storage.js"></script>
+  <script src="js/systems/audio.js"></script>
+  <script src="js/systems/animations.js"></script>
+  <script src="js/core/game.js"></script>
+  <script src="js/ui/card-inspector.js"></script>
+  <script src="js/ui/deck-builder.js"></script>
+  <script src="js/features/battlefield-overlay.js"></script>
+</body>
+</html>

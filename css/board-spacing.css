@@ -1,0 +1,46 @@
+/* Board Equal Spacing
+   Makes Deck/Discard columns use the same width and gap as every board slot.
+*/
+
+.board-grid{
+  --board-slot-width:86px;
+  --board-column-gap:16px;
+
+  grid-template-columns:repeat(5,var(--board-slot-width)) !important;
+  column-gap:var(--board-column-gap) !important;
+  justify-content:center !important;
+}
+
+/* Keep every grid item centered inside an equal-width column. */
+.board-grid > .slot,
+.board-grid > .pile,
+.board-grid > .shared-gap{
+  width:var(--board-slot-width) !important;
+  justify-self:center !important;
+}
+
+/* Deck and discard no longer overflow a narrower outside column. */
+.board-grid > .pile{
+  margin-inline:0 !important;
+}
+
+/* Preserve the intentionally wider separation of side spell slots,
+   without changing Deck/Discard spacing. */
+.board-grid > .spell-slot:not(.shared-slot){
+  width:86px !important;
+}
+
+@media(max-width:1200px){
+  .board-grid{
+    --board-column-gap:12px;
+  }
+}
+
+@media(max-width:900px){
+  .board-grid{
+    min-width:calc(
+      (var(--board-slot-width) * 5) +
+      (var(--board-column-gap) * 4)
+    ) !important;
+  }
+}
